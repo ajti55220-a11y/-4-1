@@ -1,0 +1,3732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGITAL LAB // Y2K OS</title>
+  <style>
+    /* ========================================================================
+       Y2K RETRO OS DESIGN TOKENS & THEMES (ACID, WIN98, MATRIX, GLAMOUR)
+       ======================================================================== */
+    :root {
+      --bg-desktop: #0b0724;
+      --win-bg: #c0c0c0;
+      --win-card: #dcdcdc;
+      --win-header-a: #000080;
+      --win-header-b: #1084d0;
+      --text-main: #000000;
+      --text-dim: #333333;
+      --text-light: #ffffff;
+      --border-light: #ffffff;
+      --border-dark: #404040;
+      --border-shadow: #808080;
+      --accent-1: #00ff66;
+      --accent-2: #ff00cc;
+      --accent-3: #00ffff;
+      --font-pixel: "Courier New", Courier, monospace;
+      --font-ui: Tahoma, Verdana, Geneva, sans-serif;
+    }
+
+    body.theme-acid {
+      --bg-desktop: #1a0033;
+      --win-bg: #2b0057;
+      --win-card: #16002e;
+      --win-header-a: #ff00aa;
+      --win-header-b: #00ffcc;
+      --text-main: #f4f4ff;
+      --text-dim: #b8b2d8;
+      --border-light: #ff66ff;
+      --border-dark: #090014;
+      --border-shadow: #5e0099;
+      --accent-1: #ccff00;
+      --accent-2: #ff22aa;
+      --accent-3: #00ffff;
+    }
+
+    body.theme-win98 {
+      --bg-desktop: #008080;
+      --win-bg: #c0c0c0;
+      --win-card: #efefef;
+      --win-header-a: #000080;
+      --win-header-b: #1084d0;
+      --text-main: #000000;
+      --text-dim: #444444;
+      --border-light: #ffffff;
+      --border-dark: #222222;
+      --border-shadow: #808080;
+      --accent-1: #0000aa;
+      --accent-2: #800080;
+      --accent-3: #006666;
+    }
+
+    body.theme-matrix {
+      --bg-desktop: #020c04;
+      --win-bg: #071b0b;
+      --win-card: #041107;
+      --win-header-a: #005511;
+      --win-header-b: #00aa22;
+      --text-main: #55ff77;
+      --text-dim: #2aa844;
+      --border-light: #44ff66;
+      --border-dark: #001a04;
+      --border-shadow: #0d4017;
+      --accent-1: #00ff41;
+      --accent-2: #aaff00;
+      --accent-3: #00ffaa;
+    }
+
+    body.theme-glamour {
+      --bg-desktop: #380028;
+      --win-bg: #ff99dd;
+      --win-card: #ffe6f7;
+      --win-header-a: #cc0077;
+      --win-header-b: #ff55bb;
+      --text-main: #2a001e;
+      --text-dim: #6e1852;
+      --border-light: #ffffff;
+      --border-dark: #4d0033;
+      --border-shadow: #b83d8f;
+      --accent-1: #990066;
+      --accent-2: #ff0088;
+      --accent-3: #0088cc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: var(--bg-desktop);
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0),
+        linear-gradient(135deg, rgba(255, 0, 204, 0.12), rgba(0, 255, 255, 0.12));
+      background-size: 20px 20px, 100% 100%;
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+      padding-bottom: 52px;
+    }
+
+    .bevel-out {
+      border-top: 2px solid var(--border-light);
+      border-left: 2px solid var(--border-light);
+      border-right: 2px solid var(--border-dark);
+      border-bottom: 2px solid var(--border-dark);
+      box-shadow: inset -1px -1px 0 var(--border-shadow);
+    }
+
+    .bevel-in {
+      border-top: 2px solid var(--border-dark);
+      border-left: 2px solid var(--border-dark);
+      border-right: 2px solid var(--border-light);
+      border-bottom: 2px solid var(--border-light);
+      box-shadow: inset 1px 1px 0 var(--border-shadow);
+    }
+
+    .y2k-btn {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: bold;
+      padding: 4px 10px;
+      background: var(--win-bg);
+      color: var(--text-main);
+      border-top: 2px solid var(--border-light);
+      border-left: 2px solid var(--border-light);
+      border-right: 2px solid var(--border-dark);
+      border-bottom: 2px solid var(--border-dark);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .y2k-btn:active {
+      border-top: 2px solid var(--border-dark);
+      border-left: 2px solid var(--border-dark);
+      border-right: 2px solid var(--border-light);
+      border-bottom: 2px solid var(--border-light);
+      transform: translateY(1px);
+    }
+
+    .y2k-btn-accent {
+      background: var(--accent-1);
+      color: #000000;
+    }
+
+    .y2k-btn-warn {
+      background: var(--accent-2);
+      color: #ffffff;
+    }
+
+    /* ========================================================================
+       TOP MARQUEE & BROWSER CHROME
+       ======================================================================== */
+    .top-ticker {
+      background: #000000;
+      color: #ffff00;
+      border-bottom: 2px solid var(--accent-2);
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ticker-scroll {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: tickerMove 22s linear infinite;
+    }
+
+    @keyframes tickerMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-200%); }
+    }
+
+    .browser-shell {
+      max-width: 1440px;
+      margin: 8px auto;
+      padding: 0 8px;
+    }
+
+    .browser-window {
+      background: var(--win-bg);
+      color: var(--text-main);
+    }
+
+    .title-bar {
+      background: linear-gradient(90deg, var(--win-header-a), var(--win-header-b));
+      color: #ffffff;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .title-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .profile-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 2px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #ffffff;
+    }
+
+    .profile-mini-av {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border: 1px solid #ffff00;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .tabs-strip {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px 6px 0;
+      background: var(--win-card);
+      overflow-x: auto;
+      border-bottom: 2px solid var(--border-dark);
+    }
+
+    .y2k-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: var(--win-bg);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: none;
+    }
+
+    .y2k-tab.active {
+      background: var(--win-card);
+      color: var(--accent-1);
+      padding-bottom: 7px;
+      margin-bottom: -2px;
+      border-bottom: 2px solid var(--win-card);
+    }
+
+    .tab-close {
+      font-weight: bold;
+      padding: 0 3px;
+      border-radius: 2px;
+      opacity: 0.75;
+    }
+
+    .tab-close:hover {
+      opacity: 1;
+      background: #ff0044;
+      color: #fff;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      background: var(--win-bg);
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border-shadow);
+    }
+
+    .omnibox {
+      flex: 1;
+      min-width: 180px;
+      padding: 4px 8px;
+      font-family: var(--font-pixel);
+      font-size: 12.5px;
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .bookmarks-bar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 6px;
+      background: var(--win-card);
+      overflow-x: auto;
+      border-bottom: 2px solid var(--border-shadow);
+    }
+
+    /* ========================================================================
+       WORKSPACE SPLIT: MAIN VIEWPORT + ZU-ZU AI FRIEND SIDEBAR
+       ======================================================================== */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 8px;
+      padding: 8px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .viewport-pane {
+      min-height: 540px;
+      background: var(--win-bg);
+      padding: 8px;
+    }
+
+    .zuzu-sidebar {
+      background: var(--win-bg);
+      padding: 8px;
+    }
+
+    .zuzu-avatar-box {
+      background: #09031c;
+      color: #00ffff;
+      border: 2px solid var(--accent-2);
+      padding: 8px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .zuzu-face {
+      font-family: var(--font-pixel);
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffff00;
+      margin: 4px 0;
+    }
+
+    .zuzu-chat-log {
+      height: 260px;
+      overflow-y: auto;
+      background: #0d0d16;
+      color: #f0f0ff;
+      padding: 8px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .zuzu-msg {
+      padding: 6px 8px;
+      border-radius: 4px;
+      line-height: 1.38;
+      word-break: break-word;
+    }
+
+    .zuzu-msg-bot {
+      background: #1a1536;
+      border-left: 3px solid #00ffff;
+    }
+
+    .zuzu-msg-user {
+      background: #2e1238;
+      border-left: 3px solid #ff33cc;
+      align-self: flex-end;
+      max-width: 92%;
+    }
+
+    /* ========================================================================
+       COMMON MODULE CARDS & CONTROLS
+       ======================================================================== */
+    .y2k-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .win-box {
+      background: var(--win-bg);
+      padding: 8px;
+    }
+
+    .win-box-header {
+      background: linear-gradient(90deg, var(--win-header-a), var(--win-header-b));
+      color: #ffffff;
+      padding: 3px 7px;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .contrast-panel {
+      background: var(--win-card);
+      color: var(--text-main);
+      padding: 10px;
+      border-radius: 3px;
+    }
+
+    .retro-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-family: var(--font-pixel);
+      font-size: 10.5px;
+      font-weight: bold;
+      background: #000;
+      color: var(--accent-1);
+      border: 1px solid var(--accent-1);
+    }
+
+    .y2k-sticker {
+      position: fixed;
+      z-index: 40;
+      padding: 4px 8px;
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      font-weight: bold;
+      background: #ffff00;
+      color: #000;
+      border: 2px solid #000;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .cat-heart {
+      position: fixed;
+      z-index: 120;
+      font-size: 18px;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatHeart 0.92s ease-out forwards;
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(0) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-42px) scale(1.3); opacity: 0; }
+    }
+
+    /* ========================================================================
+       ARCADE CARTRIDGES & CANVAS
+       ======================================================================== */
+    .game-cartridge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .game-cartridge {
+      padding: 8px;
+      text-align: left;
+      background: var(--win-card);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .game-cartridge.selected {
+      background: var(--accent-2);
+      color: #fff;
+    }
+
+    .cart-sub {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
+    .game-cartridge.selected .cart-sub {
+      color: #ffff00;
+    }
+
+    .retro-canvas {
+      display: block;
+      width: 100%;
+      background: #000;
+    }
+
+    .pet-card-item {
+      background: var(--win-card);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .pixel-board {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      max-width: 320px;
+      margin: 0 auto;
+      border: 2px solid var(--border-dark);
+    }
+
+    .px-cell {
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: crosshair;
+    }
+
+    .hacker-term {
+      background: #050a05;
+      color: #00ff41;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      padding: 10px;
+      height: 220px;
+      overflow-y: auto;
+      line-height: 1.45;
+    }
+
+    .meme-box {
+      background: #000;
+      border: 2px solid #444;
+    }
+
+    .tama-lcd-screen {
+      background: #9bbc0f;
+      color: #0f380f;
+      font-family: var(--font-pixel);
+      font-weight: bold;
+      padding: 16px;
+      text-align: center;
+    }
+
+    /* ========================================================================
+       BOTTOM TASKBAR + DESKTOP PET
+       ======================================================================== */
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40px;
+      background: var(--win-bg);
+      border-top: 2px solid var(--border-light);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+
+    .taskbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .taskbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+      font-family: var(--font-pixel);
+      font-size: 11.5px;
+      font-weight: bold;
+    }
+
+    .taskbar-pet {
+      position: absolute;
+      bottom: 4px;
+      left: 170px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      user-select: none;
+      transition: left 0.35s ease;
+      z-index: 5;
+    }
+
+    .cat-bubble {
+      display: none;
+      position: absolute;
+      bottom: 34px;
+      left: 0;
+      background: #ffffcc;
+      color: #000;
+      border: 2px solid #000;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    #y2kToast {
+      display: none;
+      position: fixed;
+      bottom: 54px;
+      right: 16px;
+      z-index: 150;
+      background: #000;
+      color: #00ff66;
+      border: 2px solid #00ff66;
+      padding: 8px 12px;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOP NEWS MARQUEE -->
+  <div class="top-ticker">
+    <span class="retro-badge">Y2K NEWS</span>
+    <div class="ticker-scroll">
+      <div class="ticker-text">
+        ★ ДОБРО ПОЖАЛОВАТЬ В DIGITAL LAB // Y2K OS ★ КЛИКАЙ ПО КОТИКУ НА ПАНЕЛИ ЗАДАЧ, ЧТОБЫ ПОГЛАДИТЬ ★ ПОБОЛТАЙ С ДРУГОМ ЗУ ЗУ ★ ЗАПУСТИ CYBER STRIKE 3D И 14 МИНИ-ИГР ★ ПИШИ БИТЫ В FL STUDIO 2004 ★ ЗАВОДИ ПИТОМЦЕВ В ЗООМАГАЗИНЕ ★
+      </div>
+    </div>
+    <span id="visitorCounter" class="retro-badge">ГОСТЬ #2004</span>
+  </div>
+
+  <!-- FLOATING DRAGGABLE Y2K STICKERS -->
+  <div class="y2k-sticker" style="top:115px; right:360px;" data-sticker="1">★ 2004 RULEZ ★</div>
+  <div class="y2k-sticker" style="top:260px; right:350px; background:#00ffff;" data-sticker="2">CYBER_KID.EXE</div>
+
+  <!-- MAIN BROWSER SHELL -->
+  <div class="browser-shell">
+    <div class="browser-window bevel-out">
+      <div class="title-bar">
+        <div>🖥️ DIGITAL LAB // Y2K BROWSER OS v4.2</div>
+        <div class="title-controls">
+          <div id="topProfileChip" class="profile-chip" title="Открыть профиль">
+            <span id="topProfileAvatar" class="profile-mini-av">😎</span>
+            <span id="topProfileName">Братан</span>
+            <span id="topProfileId" style="color:#ffff00;">#2004-777</span>
+          </div>
+          <span id="topXpBadge" class="retro-badge">LV.1 • 0 XP</span>
+          <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-theme="">Default</button>
+          <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-theme="theme-acid">Acid</button>
+          <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-theme="theme-win98">Win98</button>
+          <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-theme="theme-matrix">Matrix</button>
+          <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-theme="theme-glamour">Glamour</button>
+        </div>
+      </div>
+
+      <!-- TABS STRIP -->
+      <div id="tabsStrip" class="tabs-strip"></div>
+
+      <!-- NAVIGATION & OMNIBOX -->
+      <div class="nav-bar">
+        <button class="y2k-btn" id="backBtn" title="Назад">←</button>
+        <button class="y2k-btn" id="fwdBtn" title="Вперёд">→</button>
+        <button class="y2k-btn" id="reloadBtn" title="Обновить">↻</button>
+        <button class="y2k-btn" id="homeBtn" title="На рабочий стол">🏠</button>
+        <input id="omniboxInput" class="omnibox bevel-in" type="text" value="lab://hub" readonly />
+        <button class="y2k-btn" id="trailToggleBtn">✨ Шлейф: ON</button>
+        <button class="y2k-btn" id="muteToggleBtn">🔊 Звук: ON</button>
+      </div>
+
+      <!-- QUICK BOOKMARKS -->
+      <div id="bookmarksBar" class="bookmarks-bar"></div>
+
+      <!-- MAIN WORKSPACE: MODULE VIEWPORT + ZU-ZU AI FRIEND -->
+      <div class="workspace-grid">
+        <div id="moduleViewport" class="viewport-pane bevel-in"></div>
+
+        <aside class="zuzu-sidebar bevel-out">
+          <div class="win-box-header">
+            <span>🤖 ЗУ ЗУ — ИИ-ДРУГ</span>
+            <span id="zuzuFriendBadge">ДРУЖБА 50%</span>
+          </div>
+
+          <div class="zuzu-avatar-box">
+            <div style="font-size:11px; color:#00ff66;">ZU-ZU_FRIEND.EXE // ONLINE</div>
+            <div id="zuzuFace" class="zuzu-face">( ^o^ )</div>
+            <div style="font-size:11px; color:#ddd;">Твой напарник, гид и собеседник</div>
+          </div>
+
+          <div style="display:flex; gap:4px; margin-bottom:6px; flex-wrap:wrap;">
+            <button class="y2k-btn y2k-btn-accent" style="padding:2px 6px; font-size:11px;" data-zuzu-quick="Погладь кота на панели задач">🐾 Погладь кота</button>
+            <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" id="zuzuGameBtn">🎲 Чат-игра</button>
+            <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" data-zuzu-quick="Запусти рандомную игру">🎮 Игра</button>
+            <button class="y2k-btn" style="padding:2px 6px; font-size:11px;" id="zuzuClearBtn">🧹 Очистить</button>
+          </div>
+
+          <div id="zuzuChatLog" class="zuzu-chat-log bevel-in"></div>
+
+          <div style="display:flex; gap:5px;">
+            <input id="zuzuInput" type="text" class="bevel-in" placeholder="Спроси что угодно или дай команду..." style="flex:1; padding:6px; background:#fff; color:#000; font-size:12px;" />
+            <button id="zuzuSendBtn" class="y2k-btn y2k-btn-accent">➤</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM TASKBAR WITH INTERACTIVE DESKTOP PET -->
+  <div id="taskbar" class="taskbar">
+    <div class="taskbar-left">
+      <button id="startMenuBtn" class="y2k-btn y2k-btn-accent">❖ ПУСК // LAB</button>
+    </div>
+
+    <div id="taskbarPet" class="taskbar-pet" title="Кликни, чтобы погладить питомца!">
+      <div id="catBubble" class="cat-bubble">Мррр~ ♥</div>
+      <svg id="taskbarPetSvg" width="34" height="24" viewBox="0 0 18 12" shape-rendering="crispEdges"></svg>
+      <span id="taskbarPetName" style="font-size:11px; font-weight:bold; background:rgba(0,0,0,0.65); color:#fff; padding:1px 5px; border-radius:3px;">Рыжик Y2K</span>
+    </div>
+
+    <div class="taskbar-right">
+      <span>♥ <span id="catLoveStat">80%</span></span>
+      <span>🐟 <span id="catHungerStat">75%</span></span>
+      <span id="sysClock" class="retro-badge">00:00:00</span>
+    </div>
+  </div>
+
+  <div id="y2kToast"></div>
+
+  <script>
+    /* ========================================================================
+       PERSISTENT STATE & MODULE REGISTRY
+       ======================================================================== */
+    const STORAGE_KEY = 'digital_lab_y2k_os_v4';
+
+    const DEFAULT_STATE = {
+      xp: 60,
+      userName: 'Братан',
+      userId: '2004-777',
+      userStatus: 'Покоряю ретро-интернет 2004!',
+      userAvatar: '😎',
+      userCustomImg: '',
+      theme: 'theme-acid',
+      friendship: 50,
+      catLove: 80,
+      catHunger: 75,
+      catPetsCount: 0,
+      activePetId: 'cat_orange',
+      ownedPets: ['cat_orange'],
+      visitorCount: 2004,
+      highScores: {
+        strike3d: 0,
+        snake: 0,
+        arkanoid: 0,
+        tetris: 0,
+        minesweeper: 0,
+        pong: 0,
+        dino: 0,
+        invaders: 0,
+        flappy: 0,
+        memory: 0,
+        aim: 0,
+        drift: 0,
+        cyberpong: 0,
+        blaster: 0
+      },
+      savedTracks: [
+        {
+          id: 'demo_1',
+          title: 'Midnight Y2K Groove',
+          bpm: 128,
+          steps: [
+            [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0],
+            [0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0],
+            [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
+            [1,0,0,1, 0,0,1,0, 1,0,0,1, 0,1,0,0],
+            [0,0,1,0, 0,1,0,1, 0,0,1,0, 1,0,1,0]
+          ]
+        }
+      ],
+      guestbook: [
+        { author: 'Зу Зу (#0000-AI)', msg: 'Привет! Я всегда на связи: задавай любые вопросы, запускай 14 игр или пиши биты в FL Studio 2004!' },
+        { author: 'Neo_2004 (#1337-X)', msg: 'CYBER STRIKE 3D и гонки Turbo Drift просто огонь!' }
+      ],
+      pixelCanvas: Array(256).fill('#111122')
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        const parsed = JSON.parse(raw);
+        return {
+          ...structuredClone(DEFAULT_STATE),
+          ...parsed,
+          highScores: { ...DEFAULT_STATE.highScores, ...(parsed.highScores || {}) },
+          ownedPets: Array.isArray(parsed.ownedPets) && parsed.ownedPets.length ? parsed.ownedPets : ['cat_orange'],
+          savedTracks: Array.isArray(parsed.savedTracks) && parsed.savedTracks.length ? parsed.savedTracks : DEFAULT_STATE.savedTracks,
+          guestbook: Array.isArray(parsed.guestbook) && parsed.guestbook.length ? parsed.guestbook : DEFAULT_STATE.guestbook,
+          pixelCanvas: Array.isArray(parsed.pixelCanvas) && parsed.pixelCanvas.length === 256 ? parsed.pixelCanvas : Array(256).fill('#111122')
+        };
+      } catch (e) {
+        return structuredClone(DEFAULT_STATE);
+      }
+    }
+
+    let appState = loadState();
+    appState.visitorCount = (appState.visitorCount || 2004) + 1;
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {}
+    }
+
+    function showToast(text) {
+      const el = document.getElementById('y2kToast');
+      if (!el) return;
+      el.textContent = text;
+      el.style.display = 'block';
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => { el.style.display = 'none'; }, 2400);
+    }
+
+    function grantXP(amount, reason = '') {
+      const prevLvl = Math.floor((appState.xp || 0) / 100) + 1;
+      appState.xp = Math.max(0, (appState.xp || 0) + amount);
+      const newLvl = Math.floor(appState.xp / 100) + 1;
+      saveState();
+      updateTopStats();
+      showToast(`+${amount} XP${reason ? ' • ' + reason : ''}`);
+      if (newLvl > prevLvl) {
+        playTone(660, 0.12, 'square', 990);
+        zuzuSay(`Уровень повышен! Теперь у тебя LV.${newLvl}! Красавчик, ${appState.userName}! 🔥🎉`, 'hype');
+      }
+    }
+
+    function boostFriendship(delta = 3) {
+      appState.friendship = Math.min(100, Math.max(0, (appState.friendship ?? 50) + delta));
+      saveState();
+      updateFriendshipUI();
+    }
+
+    function updateFriendshipUI() {
+      const el = document.getElementById('zuzuFriendBadge');
+      if (el) el.textContent = `ДРУЖБА ${appState.friendship ?? 50}%`;
+    }
+
+    const MODULES = {
+      hub: { id: 'hub', title: 'Desktop Hub', url: 'lab://hub', icon: '🏠' },
+      profile: { id: 'profile', title: 'Мой Профиль & ID', url: 'lab://profile', icon: '🪪' },
+      flstudio: { id: 'flstudio', title: 'FL Studio 2004 & Треки', url: 'lab://flstudio', icon: '🎹' },
+      arcade: { id: 'arcade', title: '14 Arcade & Cyber Strike 3D', url: 'lab://arcade', icon: '🔫' },
+      shop: { id: 'shop', title: 'Зоомагазин & Лавка', url: 'lab://shop', icon: '🐾' },
+      winamp: { id: 'winamp', title: 'Winamp Media Lab', url: 'lab://winamp', icon: '🎛️' },
+      cdrom: { id: 'cdrom', title: 'CD-ROM Квиз', url: 'lab://cdrom', icon: '💿' },
+      paint: { id: 'paint', title: 'Pixel Paint 2000', url: 'lab://paint', icon: '🎨' },
+      terminal: { id: 'terminal', title: 'Hacker Terminal', url: 'lab://terminal', icon: '💻' },
+      memes: { id: 'memes', title: 'Демотиватор Лаб', url: 'lab://memes', icon: '🖼️' },
+      oracle: { id: 'oracle', title: 'Кибер-Оракул', url: 'lab://oracle', icon: '🔮' },
+      tamagotchi: { id: 'tamagotchi', title: 'Тамагочи & Саундборд', url: 'lab://tamagotchi', icon: '👾' }
+    };
+
+    const PET_CATALOG = [
+      { id: 'cat_orange', name: 'Рыжик Y2K', species: 'Кот-программист', color: '#ff8800', ear: '#ff4466', tail: '#ffaa33', price: 0, desc: 'Верный котик на панели задач. Любит ласку и баги.' },
+      { id: 'cat_neon', name: 'Неон-Пантера', species: 'Кибер-кошка', color: '#222244', ear: '#00ffff', tail: '#ff00cc', price: 80, desc: 'Светится в темноте и обожает 3D-шутеры.' },
+      { id: 'cat_fox', name: 'Лисичка Firefox', species: 'Огненный лис', color: '#ff5500', ear: '#ffff00', tail: '#ffffff', price: 120, desc: 'Быстрая браузерная лисичка с пушистым хвостом.' },
+      { id: 'cat_bunny', name: 'Гламур-Кролик', species: 'Поп-звезда 2003', color: '#ff88dd', ear: '#ffffff', tail: '#ffff00', price: 150, desc: 'Дерзкий розовый зверёк для максимального Y2K-вайба.' },
+      { id: 'cat_alien', name: 'Пришелец Зорг', species: 'НЛО-питомец', color: '#00dd66', ear: '#00ffff', tail: '#ccff00', price: 200, desc: 'Прилетел из космоса ради твоего музла в FL Studio.' },
+      { id: 'cat_dragon', name: 'Золотой Дракоша', species: 'Легенда сети', color: '#ffcc00', ear: '#ff3300', tail: '#ff6600', price: 300, desc: 'Редкий питомец для главных мастеров Digital Lab OS.' }
+    ];
+
+    const ARCADE_GAMES_META = [
+      { id: 'strike3d', name: '🔫 Cyber Strike 3D', genre: '3D Raycaster Шутер' },
+      { id: 'drift', name: '🏎️ Turbo Drift 2004', genre: 'Неоновые Гонки' },
+      { id: 'cyberpong', name: '⚡ Cyber Pong', genre: 'Неоновый Пинг-Понг' },
+      { id: 'blaster', name: '☄️ Meteor Blaster', genre: 'Космо-Шутер' },
+      { id: 'snake', name: '🐍 Neon Snake', genre: 'Аркада' },
+      { id: 'arkanoid', name: '🧱 Space Arkanoid', genre: 'Аркада' },
+      { id: 'tetris', name: '🟦 Cyber Tetris', genre: 'Головоломка' },
+      { id: 'minesweeper', name: '💣 Win98 Сапёр', genre: 'Логика' },
+      { id: 'pong', name: '🏓 Pong vs Зу Зу', genre: 'Дуэль' },
+      { id: 'dino', name: '🦖 Dino Y2K Run', genre: 'Раннер' },
+      { id: 'invaders', name: '👾 Space Invaders', genre: 'Шутер' },
+      { id: 'flappy', name: '🐱 Flappy Cat', genre: 'Реакция' },
+      { id: 'memory', name: '🟥 Memory Matrix', genre: 'Память' },
+      { id: 'aim', name: '🎯 Aim Clicker', genre: 'Меткость' }
+    ];
+
+    /* ========================================================================
+       AUDIO, THEME, TABS & CORE SYSTEM FUNCTIONS
+       ======================================================================== */
+    let selectedArcadeGameId = 'strike3d';
+    let isGlobalMuted = false;
+    let isTrailOn = true;
+    let sharedAudioCtx = null;
+    let cleanupModule = null;
+
+    let browserTabs = [
+      { id: 't1', moduleId: 'hub', title: 'Desktop Hub', url: 'lab://hub', icon: '🏠' },
+      { id: 't2', moduleId: 'arcade', title: '14 Arcade & Cyber Strike 3D', url: 'lab://arcade', icon: '🔫' },
+      { id: 't3', moduleId: 'flstudio', title: 'FL Studio 2004 & Треки', url: 'lab://flstudio', icon: '🎹' }
+    ];
+    let activeTabId = 't1';
+    let navHistory = ['hub'];
+    let navIndex = 0;
+
+    function getAudioCtx() {
+      if (isGlobalMuted) return null;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        if (!sharedAudioCtx) sharedAudioCtx = new Ctx();
+        if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+        return sharedAudioCtx;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function playTone(freq = 440, duration = 0.08, type = 'square', endFreq = null) {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(freq, now);
+        if (endFreq !== null) osc.frequency.exponentialRampToValueAtTime(Math.max(20, endFreq), now + duration);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+      } catch (e) {}
+    }
+
+    function playCatPurr() {
+      playTone(150, 0.12, 'triangle', 185);
+      setTimeout(() => playTone(175, 0.12, 'triangle', 145), 110);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function applyTheme(themeClass) {
+      appState.theme = themeClass || '';
+      document.body.classList.remove('theme-acid', 'theme-win98', 'theme-matrix', 'theme-glamour');
+      if (appState.theme) document.body.classList.add(appState.theme);
+      saveState();
+    }
+
+    function getActiveTab() {
+      return browserTabs.find(t => t.id === activeTabId) || browserTabs[0];
+    }
+
+    function navigateTab(moduleId, pushHist = true) {
+      const mod = MODULES[moduleId] || MODULES.hub;
+      const tab = getActiveTab();
+      if (tab) {
+        tab.moduleId = mod.id;
+        tab.title = mod.title;
+        tab.url = mod.url;
+        tab.icon = mod.icon;
+      }
+      if (pushHist) {
+        navHistory = navHistory.slice(0, navIndex + 1);
+        if (navHistory[navHistory.length - 1] !== mod.id) {
+          navHistory.push(mod.id);
+          navIndex = navHistory.length - 1;
+        }
+      }
+      renderOS();
+    }
+
+    function openNewTab(moduleId = 'hub') {
+      const mod = MODULES[moduleId] || MODULES.hub;
+      const newTab = {
+        id: 't_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        moduleId: mod.id,
+        title: mod.title,
+        url: mod.url,
+        icon: mod.icon
+      };
+      browserTabs.push(newTab);
+      activeTabId = newTab.id;
+      navHistory = navHistory.slice(0, navIndex + 1);
+      navHistory.push(mod.id);
+      navIndex = navHistory.length - 1;
+      renderOS();
+    }
+
+    function closeTab(tabId) {
+      if (browserTabs.length <= 1) return;
+      const idx = browserTabs.findIndex(t => t.id === tabId);
+      if (idx === -1) return;
+      browserTabs.splice(idx, 1);
+      if (activeTabId === tabId) {
+        activeTabId = browserTabs[Math.max(0, idx - 1)].id;
+      }
+      renderOS();
+    }
+
+    function renderTabsAndBars() {
+      const strip = document.getElementById('tabsStrip');
+      const omnibox = document.getElementById('omniboxInput');
+      const bookmarks = document.getElementById('bookmarksBar');
+      const curTab = getActiveTab();
+
+      if (omnibox && curTab) omnibox.value = curTab.url;
+
+      if (strip) {
+        strip.innerHTML = '';
+        browserTabs.forEach(tab => {
+          const el = document.createElement('div');
+          el.className = 'y2k-tab bevel-out' + (tab.id === activeTabId ? ' active' : '');
+          el.innerHTML = `
+            <span>${tab.icon}</span>
+            <span class="tab-title">${escapeHtml(tab.title)}</span>
+            ${browserTabs.length > 1 ? '<span class="tab-close" title="Закрыть">×</span>' : ''}
+          `;
+          el.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-close')) {
+              e.stopPropagation();
+              closeTab(tab.id);
+              return;
+            }
+            activeTabId = tab.id;
+            renderOS();
+          });
+          strip.appendChild(el);
+        });
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'y2k-btn';
+        addBtn.id = 'addTabBtn';
+        addBtn.title = 'Новая вкладка';
+        addBtn.textContent = '+';
+        addBtn.addEventListener('click', () => openNewTab('hub'));
+        strip.appendChild(addBtn);
+      }
+
+      if (bookmarks) {
+        const quickMods = ['hub', 'profile', 'flstudio', 'arcade', 'shop', 'winamp', 'cdrom', 'paint', 'terminal', 'memes', 'oracle', 'tamagotchi'];
+        bookmarks.innerHTML = quickMods.map(id => {
+          const m = MODULES[id];
+          const active = curTab && curTab.moduleId === id ? 'y2k-btn-accent' : '';
+          return `<button class="y2k-btn ${active}" style="padding:2px 7px; font-size:11px;" data-bm="${id}">${m.icon} ${m.title}</button>`;
+        }).join('');
+        bookmarks.querySelectorAll('[data-bm]').forEach(btn => {
+          btn.addEventListener('click', () => navigateTab(btn.dataset.bm));
+        });
+      }
+    }
+
+    function updateTopStats() {
+      const lvl = Math.floor((appState.xp || 0) / 100) + 1;
+      const xpEl = document.getElementById('topXpBadge');
+      const pChip = document.getElementById('topProfileChip');
+      const pName = document.getElementById('topProfileName');
+      const pId = document.getElementById('topProfileId');
+      const pAv = document.getElementById('topProfileAvatar');
+      const loveEl = document.getElementById('catLoveStat');
+      const hungerEl = document.getElementById('catHungerStat');
+      const guestEl = document.getElementById('visitorCounter');
+
+      if (xpEl) xpEl.textContent = `LV.${lvl} • ${appState.xp || 0} XP`;
+      if (pName) pName.textContent = appState.userName || 'Братан';
+      if (pId) pId.textContent = `#${appState.userId || '2004-777'}`;
+      if (pAv) {
+        if (appState.userCustomImg) {
+          pAv.innerHTML = `<img src="${appState.userCustomImg}" style="width:100%; height:100%; object-fit:cover;" />`;
+        } else {
+          pAv.textContent = appState.userAvatar || '😎';
+        }
+      }
+      if (pChip) {
+        pChip.onclick = () => navigateTab('profile');
+      }
+      if (loveEl) loveEl.textContent = `${appState.catLove ?? 80}%`;
+      if (hungerEl) hungerEl.textContent = `${appState.catHunger ?? 75}%`;
+      if (guestEl) guestEl.textContent = `ГОСТЬ #${appState.visitorCount || 2004}`;
+      updateFriendshipUI();
+    }
+
+    function spawnCatHearts(symbol = '♥', color = '#ff3366') {
+      const petEl = document.getElementById('taskbarPet');
+      const rect = petEl ? petEl.getBoundingClientRect() : { left: 160, top: window.innerHeight - 50 };
+      for (let i = 0; i < 4; i++) {
+        const h = document.createElement('div');
+        h.className = 'cat-heart';
+        h.textContent = symbol;
+        h.style.color = color;
+        h.style.left = (rect.left + 12 + (i - 1.5) * 14) + 'px';
+        h.style.top = (rect.top - 12) + 'px';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 920);
+      }
+    }
+
+    function petTheCat(source = 'user') {
+      appState.catLove = Math.min(100, (appState.catLove ?? 80) + 6);
+      appState.catPetsCount = (appState.catPetsCount || 0) + 1;
+      playCatPurr();
+      spawnCatHearts('♥', '#ff3388');
+      if (appState.catPetsCount % 5 === 0) {
+        grantXP(15, 'Питомец принёс бонус за ласку');
+      } else {
+        saveState();
+        updateTopStats();
+      }
+      const bubble = document.getElementById('catBubble');
+      if (bubble) {
+        bubble.textContent = 'Мррр~ ♥';
+        bubble.style.display = 'block';
+        clearTimeout(bubble._t);
+        bubble._t = setTimeout(() => { bubble.style.display = 'none'; }, 1500);
+      }
+      if (source === 'user' && Math.random() < 0.35) {
+        zuzuSay(`Мрр! Вижу, ты гладишь питомца, ${appState.userName}! Он аж засветился от счастья! 🐾♥`, 'love');
+      }
+    }
+
+    function feedTheCat() {
+      appState.catHunger = Math.min(100, (appState.catHunger ?? 75) + 18);
+      appState.catLove = Math.min(100, (appState.catLove ?? 80) + 5);
+      playTone(580, 0.08, 'square', 820);
+      spawnCatHearts('🐟', '#00ffff');
+      grantXP(5, 'Питомец покормлен');
+    }
+
+    function renderTaskbarPet() {
+      const pet = PET_CATALOG.find(p => p.id === appState.activePetId) || PET_CATALOG[0];
+      const svgEl = document.getElementById('taskbarPetSvg');
+      const nameEl = document.getElementById('taskbarPetName');
+      const petWrap = document.getElementById('taskbarPet');
+      const bar = document.getElementById('taskbar');
+
+      if (nameEl) nameEl.textContent = pet.name;
+      if (svgEl) {
+        svgEl.innerHTML = `
+          <rect x="2" y="0" width="2" height="2" fill="${pet.color}"/>
+          <rect x="8" y="0" width="2" height="2" fill="${pet.color}"/>
+          <rect x="3" y="1" width="1" height="1" fill="${pet.ear}"/>
+          <rect x="8" y="1" width="1" height="1" fill="${pet.ear}"/>
+          <rect x="2" y="2" width="8" height="5" fill="${pet.color}"/>
+          <rect x="4" y="6" width="9" height="4" fill="${pet.color}"/>
+          <rect x="5" y="7" width="6" height="2" fill="#ffe0b3"/>
+          <rect x="13" y="4" width="2" height="3" fill="${pet.color}"/>
+          <rect x="15" y="2" width="2" height="3" fill="${pet.tail}"/>
+          <rect x="3" y="3" width="1" height="2" fill="#00ffff"/>
+          <rect x="7" y="3" width="1" height="2" fill="#00ffff"/>
+          <rect x="4" y="10" width="2" height="2" fill="#ffffff"/>
+          <rect x="10" y="10" width="2" height="2" fill="#ffffff"/>
+        `;
+      }
+
+      if (petWrap && !petWrap._bound) {
+        petWrap._bound = true;
+        petWrap.addEventListener('click', (e) => {
+          e.stopPropagation();
+          petTheCat('user');
+        });
+        petWrap.addEventListener('mouseenter', () => {
+          if (Math.random() < 0.5) playCatPurr();
+        });
+      }
+
+      if (bar && !bar._petMoveBound) {
+        bar._petMoveBound = true;
+        bar.addEventListener('click', (e) => {
+          if (e.target.closest('button') || e.target.closest('#taskbarPet')) return;
+          const rect = bar.getBoundingClientRect();
+          const targetX = Math.max(12, Math.min(rect.width - 140, e.clientX - rect.left - 24));
+          if (petWrap) {
+            petWrap.style.left = targetX + 'px';
+            petWrap.style.right = 'auto';
+            playTone(460, 0.04);
+          }
+        });
+      }
+    }
+
+    function zuzuSay(text, mood = 'happy') {
+      const face = document.getElementById('zuzuFace');
+      const log = document.getElementById('zuzuChatLog');
+      const moods = {
+        happy: '( ^o^ )',
+        hype: '( ✧Д✧ )',
+        cool: '( •_•)>⌐■-■',
+        love: '( ♥‿♥ )',
+        think: '( °_° )?'
+      };
+      if (face) face.textContent = moods[mood] || moods.happy;
+      if (log) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'zuzu-msg zuzu-msg-bot';
+        msgDiv.innerHTML = `<strong>Зу Зу:</strong> ${escapeHtml(text)}`;
+        log.appendChild(msgDiv);
+        log.scrollTop = log.scrollHeight;
+      }
+    }
+
+    function appendUserZuzuMsg(text) {
+      const log = document.getElementById('zuzuChatLog');
+      if (!log) return;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'zuzu-msg zuzu-msg-user';
+      msgDiv.innerHTML = `<strong>${escapeHtml(appState.userName)}:</strong> ${escapeHtml(text)}`;
+      log.appendChild(msgDiv);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function setUserNameIfMentioned(rawText) {
+      const m = rawText.match(/(?:меня зовут|зови меня|моё имя|мое имя)\s+([а-яА-Яa-zA-Z0-9_-]{2,18})/i);
+      if (m && m[1]) {
+        appState.userName = m[1];
+        saveState();
+        updateTopStats();
+        return true;
+      }
+      return false;
+    }
+
+    function launchSpecificArcadeGame(gameId) {
+      selectedArcadeGameId = gameId;
+      navigateTab('arcade');
+    }
+
+    function generateSmartOfflineAnswer(promptText) {
+      const low = promptText.toLowerCase();
+      if (low.includes('привет') || low.includes('здаров') || low.includes('хай')) {
+        return `Здарова, ${appState.userName}! Я Зу Зу, твой верный друг в DIGITAL LAB // Y2K OS. Можем зарубиться в Cyber Strike 3D или Turbo Drift 2004, написать крутой бит в FL Studio 2004, пройти квиз или просто поболтать! О чём думаешь? 😎`;
+      }
+      if (low.includes('игр') || low.includes('гонк') || low.includes('шутер') || low.includes('дум') || low.includes('doom')) {
+        return `В аркадном зале тебя ждут 14 мини-игр: оптимизированный 3D-шутер Cyber Strike 3D, гонки Turbo Drift 2004, Cyber Pong, Meteor Blaster, Змейка, Тетрис, Сапёр и другие. Скажи «запусти гонки» или «запусти шутер», и я сразу открою! 🎮🔥`;
+      }
+      if (low.includes('музык') || low.includes('бит') || low.includes('fl') || low.includes('трек')) {
+        return `Вкладка FL Studio 2004 позволяет собирать 16-шаговые паттерны (Kick, Snare, Hi-Hat, Acid Bass, Lead Synth), менять BPM и сохранять свои песенки в личный каталог треков. Хочешь, открою её сейчас? 🎹🎶`;
+      }
+      if (low.includes('питом') || low.includes('кот') || low.includes('зоомагаз')) {
+        return `Твой питомец сейчас гуляет по нижней панели задач — кликай по нему, чтобы погладить и получить сердечки с бонусным XP! А в Зоомагазине можно открыть новых друзей: Неон-Пантеру, Лисичку Firefox, Пришельца Зорга или Золотого Дракошу. 🐾✨`;
+      }
+      if (low.includes('угадай число')) {
+        const secret = Math.floor(Math.random() * 10) + 1;
+        return `Я загадал число от 1 до 10 — пусть будет ${secret}! Если угадал в мыслях, с меня респект и +10 XP за смелость! 🎲`;
+      }
+      if (low.includes('камень') || low.includes('ножниц') || low.includes('бумаг')) {
+        const picks = ['Камень 🪨', 'Ножницы ✂️', 'Бумага 📄'];
+        return `Мой выбор: ${picks[Math.floor(Math.random() * picks.length)]}! Пиши свой вариант и проверим, кто победил! ✌️`;
+      }
+      return `Понял тебя, ${appState.userName}! По поводу «${promptText}» скажу так: в стиле 2000-х главное — драйв, эксперименты и хорошее настроение. Могу подсказать по коду, играм, музыке или просто поддержать разговор — спрашивай дальше! 🤖💬`;
+    }
+
+    async function callGeminiWithRetry(promptText) {
+      const apiKey = "";
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+      const sysPrompt = `Ты Зу Зу — харизматичный, дружелюбный ИИ-друг и напарник в ретро-системе 2000-х годов DIGITAL LAB // Y2K OS. Пользователя зовут ${appState.userName} (ID #${appState.userId}). Отвечай развёрнуто, живо и по делу на русском языке, не обрывай мысли на полуслове.`;
+      const payload = {
+        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        systemInstruction: { parts: [{ text: sysPrompt }] },
+        generationConfig: { maxOutputTokens: 1024, temperature: 0.85 }
+      };
+
+      const delays = [800, 1600, 3200];
+      for (let attempt = 0; attempt <= delays.length; attempt++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (out && out.trim()) return out.trim();
+          throw new Error('Empty response');
+        } catch (err) {
+          if (attempt === delays.length) throw err;
+          await new Promise(r => setTimeout(r, delays[attempt]));
+        }
+      }
+    }
+
+    async function handleZuzuSend(customPrompt = null) {
+      const inp = document.getElementById('zuzuInput');
+      const raw = (customPrompt !== null ? customPrompt : (inp ? inp.value : '')).trim();
+      if (!raw) return;
+      if (inp && customPrompt === null) inp.value = '';
+
+      appendUserZuzuMsg(raw);
+      boostFriendship(4);
+      const q = raw.toLowerCase();
+
+      if (setUserNameIfMentioned(raw)) {
+        zuzuSay(`Запомнил! Теперь ты ${appState.userName}! Рад дружбе, бро! 😎🤝`, 'happy');
+        return;
+      }
+
+      if (q.includes('погладь кота') || q.includes('погладь питомц')) {
+        petTheCat('zuzu');
+        zuzuSay(`Погладил питомца на панели задач! Он замурчал от удовольствия! 🐾♥`, 'love');
+        return;
+      }
+
+      if (q.includes('покорми кота') || q.includes('покорми питомц')) {
+        feedTheCat();
+        zuzuSay(`Угостил питомца вкусной рыбкой! Сытость выросла! 🐟✨`, 'happy');
+        return;
+      }
+
+      if (q.includes('матриц')) {
+        applyTheme('theme-matrix');
+        zuzuSay('Врубил зелёную Матрицу! Чувствуешь код? 🟢💻', 'cool');
+        return;
+      }
+
+      if (q.includes('кислот') || q.includes('acid')) {
+        applyTheme('theme-acid');
+        zuzuSay('Включил кислотный Y2K-максимализм! Глазам весело! ⚡😎', 'hype');
+        return;
+      }
+
+      if (q.includes('рандомн') && q.includes('игр')) {
+        const g = ARCADE_GAMES_META[Math.floor(Math.random() * ARCADE_GAMES_META.length)];
+        zuzuSay(`Запускаю случайную игру: ${g.name}! Удачи! 🎮`, 'hype');
+        launchSpecificArcadeGame(g.id);
+        return;
+      }
+
+      if (q.includes('гонк') || q.includes('дрифт') || q.includes('drift')) {
+        zuzuSay('Открываю гонки Turbo Drift 2004! Жми газ и обходи трафик! 🏎️💨', 'hype');
+        launchSpecificArcadeGame('drift');
+        return;
+      }
+
+      if (q.includes('шутер') || q.includes('3d') || q.includes('strike')) {
+        zuzuSay('Загружаю Cyber Strike 3D! Стреляй точно в цель! 🔫🔥', 'hype');
+        launchSpecificArcadeGame('strike3d');
+        return;
+      }
+
+      if (q.includes('fl') || q.includes('бит') || q.includes('музык')) {
+        navigateTab('flstudio');
+        zuzuSay('Открываю FL Studio 2004! Собери сочный бит и сохрани его в каталог! 🎹', 'hype');
+        return;
+      }
+
+      if (q.includes('зоо') || q.includes('питом') || q.includes('магаз')) {
+        navigateTab('shop');
+        zuzuSay('Открываю Зоомагазин Питомцев! Выбирай нового друга на панель задач! 🐾', 'love');
+        return;
+      }
+
+      zuzuSay('Думаю...', 'think');
+      const log = document.getElementById('zuzuChatLog');
+      const thinkingNode = log && log.lastElementChild ? log.lastElementChild : null;
+
+      try {
+        const reply = await callGeminiWithRetry(raw);
+        if (thinkingNode) thinkingNode.remove();
+        zuzuSay(reply, 'happy');
+      } catch (e) {
+        if (thinkingNode) thinkingNode.remove();
+        zuzuSay(generateSmartOfflineAnswer(raw), 'cool');
+      }
+    }
+
+    function startClockAndTrail() {
+      const clockEl = document.getElementById('sysClock');
+      function tick() {
+        const now = new Date();
+        if (clockEl) clockEl.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      let lastSpark = 0;
+      window.addEventListener('mousemove', (e) => {
+        if (!isTrailOn) return;
+        const now = Date.now();
+        if (now - lastSpark < 38) return;
+        lastSpark = now;
+        const sp = document.createElement('div');
+        sp.style.position = 'fixed';
+        sp.style.left = e.clientX + 'px';
+        sp.style.top = e.clientY + 'px';
+        sp.style.pointerEvents = 'none';
+        sp.style.zIndex = '110';
+        sp.style.fontSize = '12px';
+        sp.style.color = ['#00ff66', '#ffff00', '#00ffff', '#ff33cc'][now % 4];
+        sp.textContent = '✦';
+        document.body.appendChild(sp);
+        setTimeout(() => sp.remove(), 420);
+      });
+
+      document.querySelectorAll('.y2k-sticker').forEach(st => {
+        let dragging = false;
+        let ox = 0;
+        let oy = 0;
+        st.addEventListener('mousedown', (e) => {
+          dragging = true;
+          ox = e.clientX - st.offsetLeft;
+          oy = e.clientY - st.offsetTop;
+          st.style.cursor = 'grabbing';
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!dragging) return;
+          st.style.left = (e.clientX - ox) + 'px';
+          st.style.top = (e.clientY - oy) + 'px';
+          st.style.right = 'auto';
+        });
+        window.addEventListener('mouseup', () => {
+          dragging = false;
+          st.style.cursor = 'grab';
+        });
+      });
+    }
+
+    function bindGlobalChrome() {
+      document.getElementById('backBtn')?.addEventListener('click', () => {
+        if (navIndex > 0) {
+          navIndex--;
+          navigateTab(navHistory[navIndex], false);
+        }
+      });
+      document.getElementById('fwdBtn')?.addEventListener('click', () => {
+        if (navIndex < navHistory.length - 1) {
+          navIndex++;
+          navigateTab(navHistory[navIndex], false);
+        }
+      });
+      document.getElementById('reloadBtn')?.addEventListener('click', () => renderOS());
+      document.getElementById('homeBtn')?.addEventListener('click', () => navigateTab('hub'));
+
+      document.querySelectorAll('[data-theme]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyTheme(btn.dataset.theme);
+          playTone(560, 0.05);
+        });
+      });
+
+      document.getElementById('trailToggleBtn')?.addEventListener('click', (e) => {
+        isTrailOn = !isTrailOn;
+        e.target.textContent = `✨ Шлейф: ${isTrailOn ? 'ON' : 'OFF'}`;
+      });
+
+      document.getElementById('muteToggleBtn')?.addEventListener('click', (e) => {
+        isGlobalMuted = !isGlobalMuted;
+        e.target.textContent = isGlobalMuted ? '🔇 Звук: OFF' : '🔊 Звук: ON';
+      });
+
+      document.getElementById('startMenuBtn')?.addEventListener('click', () => {
+        navigateTab('hub');
+        playTone(520, 0.06);
+      });
+
+      document.getElementById('zuzuSendBtn')?.addEventListener('click', () => handleZuzuSend());
+      document.getElementById('zuzuInput')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleZuzuSend();
+      });
+
+      document.querySelectorAll('[data-zuzu-quick]').forEach(btn => {
+        btn.addEventListener('click', () => handleZuzuSend(btn.dataset.zuzuQuick));
+      });
+
+      document.getElementById('zuzuGameBtn')?.addEventListener('click', () => {
+        const games = ['Угадай число от 1 до 10!', 'Камень, ножницы, бумага — сыграем?', 'Задай мне любую загадку или мини-квиз!'];
+        handleZuzuSend(games[Math.floor(Math.random() * games.length)]);
+      });
+
+      document.getElementById('zuzuClearBtn')?.addEventListener('click', () => {
+        const log = document.getElementById('zuzuChatLog');
+        if (log) log.innerHTML = '';
+        zuzuSay(`Чат очищен! Я всё так же рядом, ${appState.userName}! О чём поболтаем? 😎`, 'happy');
+      });
+    }
+
+    function renderOS() {
+      if (typeof cleanupModule === 'function') {
+        try { cleanupModule(); } catch (e) {}
+        cleanupModule = null;
+      }
+      renderTabsAndBars();
+      updateTopStats();
+      renderTaskbarPet();
+
+      const viewport = document.getElementById('moduleViewport');
+      if (!viewport) return;
+      const tab = getActiveTab();
+      const modId = tab ? tab.moduleId : 'hub';
+
+      const renderers = {
+        hub: renderHub,
+        profile: renderProfile,
+        flstudio: renderFLStudio,
+        arcade: renderArcade,
+        shop: renderPetShop,
+        winamp: renderWinamp,
+        cdrom: renderCDRomQuiz,
+        paint: renderPixelPaint,
+        terminal: renderTerminal,
+        memes: renderMemeLab,
+        oracle: renderOracle,
+        tamagotchi: renderTamagotchi
+      };
+
+      const fn = renderers[modId] || renderHub;
+      fn(viewport);
+    }
+
+    /* ========================================================================
+       MODULE 1: DESKTOP HUB (lab://hub)
+       ======================================================================== */
+    function renderHub(container) {
+      const activePet = PET_CATALOG.find(p => p.id === appState.activePetId) || PET_CATALOG[0];
+      const tiles = [
+        { id: 'profile', icon: '🪪', title: 'Мой Профиль & ID', desc: 'Ник, аватарка и паспорт' },
+        { id: 'flstudio', icon: '🎹', title: 'FL Studio 2004', desc: 'Пиши биты и сохраняй треки' },
+        { id: 'arcade', icon: '🔫', title: '14 Игр + Strike 3D', desc: 'Шутер, гонки, змейка, тетрис' },
+        { id: 'shop', icon: '🐾', title: 'Зоомагазин & Лавка', desc: 'Питомцы на панель задач' },
+        { id: 'winamp', icon: '🎛️', title: 'Winamp Media Lab', desc: 'Синт-бит и эквалайзер' },
+        { id: 'cdrom', icon: '💿', title: 'CD-ROM Квиз', desc: 'Проверь знания с XP' },
+        { id: 'paint', icon: '🎨', title: 'Pixel Paint 2000', desc: 'Рисуй пиксель-арт 16×16' },
+        { id: 'terminal', icon: '💻', title: 'Hacker Terminal', desc: 'Консольные команды' },
+        { id: 'memes', icon: '🖼️', title: 'Демотиватор Лаб', desc: 'Генератор мемов 2000-х' },
+        { id: 'oracle', icon: '🔮', title: 'Кибер-Оракул', desc: 'Предсказания на сегодня' }
+      ];
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🏠 РАБОЧИЙ СТОЛ // DIGITAL LAB Y2K OS</span>
+              <span>ПРИВЕТ, ${escapeHtml(appState.userName)} (#${escapeHtml(appState.userId)})!</span>
+            </div>
+            <div class="contrast-panel bevel-in" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+              <div>
+                <div style="font-size:15px; font-weight:bold; color:var(--accent-2);">Добро пожаловать в ретро-хаб развлечений 2004 года!</div>
+                <div style="font-size:12px; color:var(--text-dim); margin-top:3px;">
+                  Питомец <strong>${escapeHtml(activePet.name)}</strong> гуляет внизу, друг <strong>Зу Зу</strong> готов ответить на любой вопрос, а в аркадном зале ждут <strong>CYBER STRIKE 3D</strong> и <strong>TURBO DRIFT 2004</strong>!
+                </div>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="y2k-btn y2k-btn-accent" id="hubPlay3dBtn">🔫 Запуск Strike 3D</button>
+                <button class="y2k-btn y2k-btn-warn" id="hubDriftBtn">🏎️ Гонки 2004</button>
+                <button class="y2k-btn" id="hubFlBtn">🎹 FL Studio</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(175px, 1fr)); gap:8px;">
+              ${tiles.map(t => `
+                <button class="bevel-out" data-open-mod="${t.id}" style="background:var(--win-card); color:var(--text-main); padding:10px; text-align:left; cursor:pointer;">
+                  <div style="font-size:18px;">${t.icon} <strong style="font-size:12.5px; color:var(--accent-1);">${t.title}</strong></div>
+                  <div style="font-size:11px; color:var(--text-dim); margin-top:4px;">${t.desc}</div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>📖 ГОСТЕВАЯ КНИГА 2004</span>
+              <span>ЗАПИСЕЙ: ${appState.guestbook.length}</span>
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;">
+              <input type="text" id="gbInput" class="bevel-in" placeholder="Оставь запись в гостевой книге от лица ${escapeHtml(appState.userName)}..." style="flex:1; min-width:200px; padding:6px; background:#fff; color:#000; font-size:12px;" />
+              <button class="y2k-btn y2k-btn-accent" id="gbAddBtn">✍️ Написать (+10 XP)</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px; max-height:190px; overflow-y:auto;">
+              ${appState.guestbook.map(entry => `
+                <div class="contrast-panel bevel-in" style="font-size:12px;">
+                  <strong style="color:var(--accent-2);">${escapeHtml(entry.author)}:</strong> ${escapeHtml(entry.msg)}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.querySelectorAll('[data-open-mod]').forEach(btn => {
+        btn.addEventListener('click', () => navigateTab(btn.dataset.openMod));
+      });
+      document.getElementById('hubPlay3dBtn')?.addEventListener('click', () => launchSpecificArcadeGame('strike3d'));
+      document.getElementById('hubDriftBtn')?.addEventListener('click', () => launchSpecificArcadeGame('drift'));
+      document.getElementById('hubFlBtn')?.addEventListener('click', () => navigateTab('flstudio'));
+
+      document.getElementById('gbAddBtn')?.addEventListener('click', () => {
+        const inp = document.getElementById('gbInput');
+        const txt = inp ? inp.value.trim() : '';
+        if (!txt) return;
+        appState.guestbook.unshift({ author: `${appState.userName} (#${appState.userId})`, msg: txt });
+        inp.value = '';
+        grantXP(10, 'Запись в гостевой книге');
+        renderHub(container);
+      });
+    }
+
+    /* ========================================================================
+       MODULE 2: CUSTOM USER PROFILE (NICKNAME, AVATAR, ICQ/Y2K ID)
+       ======================================================================== */
+    function renderProfile(container) {
+      const avatars = ['😎', '👾', '🐱', '🦊', '🤖', '⚡', '👑', '🎧'];
+      const lvl = Math.floor((appState.xp || 0) / 100) + 1;
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🪪 КАСТОМНЫЙ ПРОФИЛЬ УЧАСТНИКА</span>
+              <span>Y2K PASSPORT</span>
+            </div>
+
+            <div class="contrast-panel bevel-in" style="display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+              <div id="profBigAvatar" style="width:76px; height:76px; background:#000; border:3px solid var(--accent-2); display:flex; align-items:center; justify-content:center; font-size:40px; overflow:hidden;">
+                ${appState.userCustomImg
+                  ? `<img src="${appState.userCustomImg}" style="width:100%; height:100%; object-fit:cover;" />`
+                  : escapeHtml(appState.userAvatar)}
+              </div>
+              <div style="flex:1; min-width:200px;">
+                <div style="font-size:17px; font-weight:bold; color:var(--accent-1);">${escapeHtml(appState.userName)} <span class="retro-badge">#${escapeHtml(appState.userId)}</span></div>
+                <div style="font-size:12px; color:var(--text-dim); margin:4px 0;">${escapeHtml(appState.userStatus)}</div>
+                <div style="font-size:12px;">Уровень: <strong>LV.${lvl}</strong> • Опыт: <strong>${appState.xp} XP</strong> • Питомцев куплено: <strong>${appState.ownedPets.length}/${PET_CATALOG.length}</strong></div>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+              <div class="contrast-panel bevel-in">
+                <div style="font-weight:bold; margin-bottom:6px;">✏️ Никнейм и статус</div>
+                <input id="profNickInput" type="text" class="bevel-in" value="${escapeHtml(appState.userName)}" maxlength="20" style="width:100%; padding:6px; margin-bottom:6px; background:#fff; color:#000;" />
+                <input id="profStatusInput" type="text" class="bevel-in" value="${escapeHtml(appState.userStatus)}" maxlength="70" style="width:100%; padding:6px; background:#fff; color:#000;" />
+              </div>
+
+              <div class="contrast-panel bevel-in">
+                <div style="font-weight:bold; margin-bottom:6px;">🔢 Уникальный ID (ICQ / Y2K)</div>
+                <div style="display:flex; gap:6px;">
+                  <input id="profIdInput" type="text" class="bevel-in" value="${escapeHtml(appState.userId)}" maxlength="14" style="flex:1; padding:6px; background:#fff; color:#000; font-family:var(--font-pixel);" />
+                  <button id="profGenIdBtn" class="y2k-btn">🎲 Случайный</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="contrast-panel bevel-in" style="margin-top:10px;">
+              <div style="font-weight:bold; margin-bottom:6px;">🎭 Выбор аватарки или загрузка фото</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                ${avatars.map(av => `<button class="y2k-btn prof-av-choice" data-av="${av}" style="font-size:18px; padding:4px 8px;">${av}</button>`).join('')}
+                <label class="y2k-btn y2k-btn-warn" style="cursor:pointer;">
+                  📁 Загрузить фото
+                  <input id="profFileInput" type="file" accept="image/*" style="display:none;" />
+                </label>
+                <button id="profResetImgBtn" class="y2k-btn">↩ Сбросить фото</button>
+              </div>
+            </div>
+
+            <div style="margin-top:10px; display:flex; gap:8px;">
+              <button id="profSaveBtn" class="y2k-btn y2k-btn-accent">💾 Сохранить профиль (+10 XP)</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      let tempAv = appState.userAvatar;
+      let tempImg = appState.userCustomImg;
+
+      function refreshPreview() {
+        const box = document.getElementById('profBigAvatar');
+        if (!box) return;
+        box.innerHTML = tempImg
+          ? `<img src="${tempImg}" style="width:100%; height:100%; object-fit:cover;" />`
+          : escapeHtml(tempAv);
+      }
+
+      container.querySelectorAll('.prof-av-choice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          tempAv = btn.dataset.av;
+          tempImg = '';
+          playTone(540, 0.05);
+          refreshPreview();
+        });
+      });
+
+      document.getElementById('profFileInput')?.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          tempImg = String(reader.result || '');
+          refreshPreview();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('profResetImgBtn')?.addEventListener('click', () => {
+        tempImg = '';
+        refreshPreview();
+      });
+
+      document.getElementById('profGenIdBtn')?.addEventListener('click', () => {
+        const partA = Math.floor(1000 + Math.random() * 9000);
+        const partB = Math.floor(100 + Math.random() * 900);
+        const inp = document.getElementById('profIdInput');
+        if (inp) inp.value = `${partA}-${partB}`;
+        playTone(620, 0.06);
+      });
+
+      document.getElementById('profSaveBtn')?.addEventListener('click', () => {
+        const nick = (document.getElementById('profNickInput')?.value || '').trim() || 'Братан';
+        const status = (document.getElementById('profStatusInput')?.value || '').trim() || 'В сети Y2K';
+        const uid = (document.getElementById('profIdInput')?.value || '').trim() || '2004-777';
+        appState.userName = nick;
+        appState.userStatus = status;
+        appState.userId = uid;
+        appState.userAvatar = tempAv;
+        appState.userCustomImg = tempImg;
+        grantXP(10, 'Профиль обновлён');
+        renderProfile(container);
+      });
+    }
+
+    /* ========================================================================
+       MODULE 3: MINI FL STUDIO 2004 + PERSONAL MUSIC CATALOG
+       ======================================================================== */
+    function renderFLStudio(container) {
+      const tracksInfo = [
+        { name: '🥁 Kick 808', freq: 110, endFreq: 42, type: 'sine' },
+        { name: ' snare / Snare', freq: 240, endFreq: 95, type: 'triangle' },
+        { name: '✨ Hi-Hat', freq: 3400, endFreq: 1800, type: 'square' },
+        { name: '🎸 Acid Bass', freq: 98, endFreq: 130, type: 'sawtooth' },
+        { name: '🎹 Lead Synth', freq: 523.25, endFreq: 659.25, type: 'square' }
+      ];
+
+      let bpm = 128;
+      let steps = Array.from({ length: 5 }, () => Array(16).fill(0));
+      const firstDemo = appState.savedTracks[0];
+      if (firstDemo && Array.isArray(firstDemo.steps)) {
+        bpm = firstDemo.bpm || 128;
+        steps = firstDemo.steps.map(r => [...r]);
+      }
+
+      let isPlaying = false;
+      let currentStep = 0;
+      let seqTimer = null;
+
+      function triggerStepAudio(stepIdx) {
+        if (stepIdx === 3 || stepIdx === 7 || stepIdx === 11 || stepIdx === 15) {
+          if (steps[0][stepIdx]) playTone(110, 0.11, 'sine', 40);
+          if (steps[1][stepIdx]) playTone(260, 0.08, 'triangle', 90);
+        } else {
+          if (steps[0][stepIdx]) playTone(115, 0.1, 'sine', 45);
+          if (steps[1][stepIdx]) playTone(220, 0.08, 'triangle', 85);
+        }
+        if (steps[2][stepIdx]) playTone(3600, 0.035, 'square', 2200);
+        if (steps[3][stepIdx]) {
+          const bassNotes = [98, 98, 130.8, 146.8, 98, 110, 130.8, 164.8];
+          playTone(bassNotes[stepIdx % bassNotes.length], 0.12, 'sawtooth');
+        }
+        if (steps[4][stepIdx]) {
+          const leadNotes = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 880];
+          playTone(leadNotes[stepIdx % leadNotes.length], 0.11, 'square');
+        }
+      }
+
+      function stopSeq() {
+        isPlaying = false;
+        if (seqTimer) {
+          clearInterval(seqTimer);
+          seqTimer = null;
+        }
+        container.querySelectorAll('.seq-col-active').forEach(el => el.classList.remove('seq-col-active'));
+      }
+
+      function startSeq() {
+        stopSeq();
+        isPlaying = true;
+        const intervalMs = Math.max(85, Math.round((60 / bpm / 4) * 1000));
+        seqTimer = setInterval(() => {
+          container.querySelectorAll('.seq-cell').forEach(c => {
+            c.style.outline = Number(c.dataset.s) === currentStep ? '2px solid #ffff00' : 'none';
+          });
+          triggerStepAudio(currentStep);
+          currentStep = (currentStep + 1) % 16;
+        }, intervalMs);
+      }
+
+      function paintCatalog() {
+        const catBox = document.getElementById('flCatalogList');
+        if (!catBox) return;
+        catBox.innerHTML = appState.savedTracks.map((tr, idx) => `
+          <div class="contrast-panel bevel-in" style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div>
+              <strong style="color:var(--accent-1);">🎵 ${escapeHtml(tr.title)}</strong>
+              <span style="font-size:11px; color:var(--text-dim);">(${tr.bpm} BPM)</span>
+            </div>
+            <div style="display:flex; gap:5px;">
+              <button class="y2k-btn y2k-btn-accent fl-load-track" data-idx="${idx}" style="padding:2px 7px; font-size:11px;">▶ Загрузить</button>
+              ${appState.savedTracks.length > 1 ? `<button class="y2k-btn fl-del-track" data-idx="${idx}" style="padding:2px 7px; font-size:11px;">🗑</button>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        catBox.querySelectorAll('.fl-load-track').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tr = appState.savedTracks[Number(btn.dataset.idx)];
+            if (!tr) return;
+            bpm = tr.bpm || 128;
+            steps = tr.steps.map(r => [...r]);
+            const bpmInp = document.getElementById('flBpmInput');
+            if (bpmInp) bpmInp.value = bpm;
+            refreshGrid();
+            startSeq();
+            showToast(`Играет: ${tr.title}`);
+          });
+        });
+
+        catBox.querySelectorAll('.fl-del-track').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.idx);
+            appState.savedTracks.splice(idx, 1);
+            saveState();
+            paintCatalog();
+          });
+        });
+      }
+
+      function refreshGrid() {
+        const gridEl = document.getElementById('flSequencerGrid');
+        if (!gridEl) return;
+        gridEl.innerHTML = tracksInfo.map((tInfo, r) => `
+          <div style="display:grid; grid-template-columns:115px repeat(16, 1fr); gap:3px; align-items:center; margin-bottom:4px;">
+            <div style="font-size:11px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${tInfo.name}</div>
+            ${Array.from({ length: 16 }, (_, s) => {
+              const on = !!steps[r][s];
+              const bg = on ? (s % 4 === 0 ? '#00ff66' : '#ff00cc') : '#1c1c2e';
+              return `<button class="seq-cell" data-r="${r}" data-s="${s}" style="height:24px; background:${bg}; border:1px solid #555; cursor:pointer;"></button>`;
+            }).join('')}
+          </div>
+        `).join('');
+
+        gridEl.querySelectorAll('.seq-cell').forEach(cell => {
+          cell.addEventListener('click', () => {
+            const r = Number(cell.dataset.r);
+            const s = Number(cell.dataset.s);
+            steps[r][s] = steps[r][s] ? 0 : 1;
+            if (steps[r][s]) playTone(tracksInfo[r].freq, 0.07, tracksInfo[r].type);
+            refreshGrid();
+          });
+        });
+      }
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🎹 FL STUDIO 2004 // ПАТТЕРН-СЕКВЕНСОР</span>
+              <span>16 ШАГОВ • 5 ДОРОЖЕК</span>
+            </div>
+
+            <div class="contrast-panel bevel-in" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+              <button id="flPlayBtn" class="y2k-btn y2k-btn-accent">▶ Играть</button>
+              <button id="flStopBtn" class="y2k-btn">⏹ Стоп</button>
+              <button id="flRandBtn" class="y2k-btn y2k-btn-warn">🎲 Рандом-бит</button>
+              <button id="flClearBtn" class="y2k-btn">🧹 Очистить</button>
+              <label style="font-size:12px; font-weight:bold;">
+                BPM:
+                <input id="flBpmInput" type="number" min="70" max="190" value="${bpm}" class="bevel-in" style="width:62px; padding:3px; background:#fff; color:#000;" />
+              </label>
+            </div>
+
+            <div class="contrast-panel bevel-in" style="overflow-x:auto; margin-bottom:10px;">
+              <div id="flSequencerGrid" style="min-width:560px;"></div>
+            </div>
+
+            <div class="contrast-panel bevel-in" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+              <input id="flTrackName" type="text" class="bevel-in" placeholder="Название своей песенки (например, Cyber Night 2004)..." style="flex:1; min-width:200px; padding:6px; background:#fff; color:#000; font-size:12px;" />
+              <button id="flSaveTrackBtn" class="y2k-btn y2k-btn-accent">💾 Сохранить в каталог (+15 XP)</button>
+            </div>
+
+            <div class="win-box-header">
+              <span>💿 КАТАЛОГ СВОЕЙ МУЗЫКИ</span>
+              <span>ТРЕКОВ: ${appState.savedTracks.length}</span>
+            </div>
+            <div id="flCatalogList" style="display:flex; flex-direction:column; gap:6px;"></div>
+          </div>
+        </div>
+      `;
+
+      refreshGrid();
+      paintCatalog();
+
+      document.getElementById('flPlayBtn')?.addEventListener('click', startSeq);
+      document.getElementById('flStopBtn')?.addEventListener('click', stopSeq);
+      document.getElementById('flBpmInput')?.addEventListener('change', (e) => {
+        bpm = Math.max(70, Math.min(190, Number(e.target.value) || 128));
+        if (isPlaying) startSeq();
+      });
+      document.getElementById('flRandBtn')?.addEventListener('click', () => {
+        steps = tracksInfo.map((_, r) => Array.from({ length: 16 }, (__, s) => {
+          if (r === 0) return s % 4 === 0 ? 1 : (Math.random() < 0.15 ? 1 : 0);
+          if (r === 1) return (s === 4 || s === 12) ? 1 : (Math.random() < 0.1 ? 1 : 0);
+          if (r === 2) return Math.random() < 0.55 ? 1 : 0;
+          return Math.random() < 0.32 ? 1 : 0;
+        }));
+        refreshGrid();
+        startSeq();
+      });
+      document.getElementById('flClearBtn')?.addEventListener('click', () => {
+        stopSeq();
+        steps = Array.from({ length: 5 }, () => Array(16).fill(0));
+        refreshGrid();
+      });
+      document.getElementById('flSaveTrackBtn')?.addEventListener('click', () => {
+        const inp = document.getElementById('flTrackName');
+        const title = (inp?.value || '').trim() || `Мой Бит #${appState.savedTracks.length + 1}`;
+        appState.savedTracks.unshift({
+          id: 'trk_' + Date.now(),
+          title,
+          bpm,
+          steps: steps.map(r => [...r])
+        });
+        if (inp) inp.value = '';
+        grantXP(15, `Трек «${title}» сохранён`);
+        paintCatalog();
+      });
+
+      cleanupModule = () => stopSeq();
+    }
+
+    /* ========================================================================
+       MODULE 4: 14 ARCADE GAMES (INCLUDING OPTIMIZED CYBER STRIKE 3D & DRIFT)
+       ======================================================================== */
+    function renderArcade(container) {
+      const curMeta = ARCADE_GAMES_META.find(g => g.id === selectedArcadeGameId) || ARCADE_GAMES_META[0];
+      const best = appState.highScores[curMeta.id] || 0;
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🎮 ИГРОВОЙ ЗАЛ Y2K // 14 МИНИ-ИГР</span>
+              <span id="arcadeBestBadge">РЕКОРД: ${best}</span>
+            </div>
+
+            <div class="game-cartridge-grid">
+              ${ARCADE_GAMES_META.map(g => `
+                <button class="game-cartridge bevel-out ${g.id === curMeta.id ? 'selected' : ''}" data-pick-game="${g.id}">
+                  <div style="font-size:12px; font-weight:bold;">${g.name}</div>
+                  <div class="cart-sub">${g.genre} • Best: ${appState.highScores[g.id] || 0}</div>
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="contrast-panel bevel-in">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <div>
+                  <strong style="font-size:14px; color:var(--accent-1);">${curMeta.name}</strong>
+                  <span style="font-size:11.5px; color:var(--text-dim);"> — ${curMeta.genre}</span>
+                </div>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  <span id="arcadeLiveScore" class="retro-badge">СЧЁТ: 0</span>
+                  <button id="arcadeRestartBtn" class="y2k-btn y2k-btn-accent">↻ Рестарт</button>
+                </div>
+              </div>
+              <div id="arcadeStage"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.querySelectorAll('[data-pick-game]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedArcadeGameId = btn.dataset.pickGame;
+          playTone(520, 0.05);
+          renderArcade(container);
+        });
+      });
+
+      const stage = document.getElementById('arcadeStage');
+      const liveScoreEl = document.getElementById('arcadeLiveScore');
+      const bestBadgeEl = document.getElementById('arcadeBestBadge');
+
+      function reportScore(val) {
+        if (liveScoreEl) liveScoreEl.textContent = `СЧЁТ: ${val}`;
+        if (val > (appState.highScores[curMeta.id] || 0)) {
+          appState.highScores[curMeta.id] = val;
+          saveState();
+          if (bestBadgeEl) bestBadgeEl.textContent = `РЕКОРД: ${val}`;
+        }
+      }
+
+      function finishGame(finalScore) {
+        reportScore(finalScore);
+        if (finalScore > 0) {
+          grantXP(Math.min(25, Math.max(5, Math.floor(finalScore / 20))), curMeta.name);
+        }
+      }
+
+      const mountFn = GAME_RUNNERS[curMeta.id] || GAME_RUNNERS.strike3d;
+      const stopRunner = mountFn(stage, reportScore, finishGame);
+
+      document.getElementById('arcadeRestartBtn')?.addEventListener('click', () => {
+        if (typeof stopRunner === 'function') stopRunner();
+        renderArcade(container);
+      });
+
+      cleanupModule = () => {
+        if (typeof stopRunner === 'function') stopRunner();
+      };
+    }
+
+    /* ------------------------------------------------------------------------
+       OPTIMIZED 3D RAYCASTER SHOOTER: CYBER STRIKE 3D
+       ------------------------------------------------------------------------ */
+    function runCyberStrike3D(stage, onScore, onFinish) {
+      stage.innerHTML = `
+        <canvas id="strike3dCanvas" width="600" height="320" class="retro-canvas bevel-in" style="max-height:340px;"></canvas>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:8px;">
+          <div style="font-size:11.5px; color:var(--text-dim);">Управление: <strong>W/S</strong> или <strong>↑/↓</strong> — шаг, <strong>A/D</strong> или <strong>←/→</strong> — поворот, <strong>Пробел / Клик</strong> — выстрел</div>
+          <div style="display:flex; gap:4px;">
+            <button class="y2k-btn" id="s3dLeft">◀</button>
+            <button class="y2k-btn" id="s3dFwd">▲</button>
+            <button class="y2k-btn" id="s3dBack">▼</button>
+            <button class="y2k-btn" id="s3dRight">▶</button>
+            <button class="y2k-btn y2k-btn-warn" id="s3dFire">🔫 ОГОНЬ</button>
+          </div>
+        </div>
+      `;
+
+      const canvas = document.getElementById('strike3dCanvas');
+      const ctx = canvas.getContext('2d');
+      const map = [
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,0,2,0,0,0,2,0,0,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,0,0,2,0,2,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,0,2,0,0,0,2,0,0,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1]
+      ];
+
+      let px = 1.8;
+      let py = 1.8;
+      let pa = 0.4;
+      let score = 0;
+      let hp = 100;
+      let muzzleFlash = 0;
+      let gameOver = false;
+
+      function spawnBot() {
+        for (let tries = 0; tries < 25; tries++) {
+          const bx = 1.5 + Math.random() * 7;
+          const by = 1.5 + Math.random() * 7;
+          if (map[Math.floor(by)][Math.floor(bx)] === 0 && Math.hypot(bx - px, by - py) > 2.2) {
+            return { x: bx, y: by, alive: true };
+          }
+        }
+        return { x: 7.5, y: 7.5, alive: true };
+      }
+
+      let bots = [spawnBot(), spawnBot(), spawnBot()];
+      const keys = {};
+
+      function shoot() {
+        if (gameOver) return;
+        muzzleFlash = 6;
+        playTone(760, 0.08, 'sawtooth', 180);
+        const dirX = Math.cos(pa);
+        const dirY = Math.sin(pa);
+        bots.forEach((b, idx) => {
+          if (!b.alive) return;
+          const dx = b.x - px;
+          const dy = b.y - py;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 0.1 || dist > 8) return;
+          const dot = (dx / dist) * dirX + (dy / dist) * dirY;
+          if (dot > 0.94) {
+            b.alive = false;
+            score += 25;
+            onScore(score);
+            playTone(320, 0.1, 'square', 640);
+            bots[idx] = spawnBot();
+          }
+        });
+      }
+
+      const onKeyDown = (e) => {
+        keys[e.code] = true;
+        if (e.code === 'Space') {
+          e.preventDefault();
+          shoot();
+        }
+      };
+      const onKeyUp = (e) => { keys[e.code] = false; };
+      window.addEventListener('keydown', onKeyDown);
+      window.addEventListener('keyup', onKeyUp);
+      canvas.addEventListener('click', shoot);
+
+      const bindHold = (id, code) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('mousedown', () => { keys[code] = true; });
+        el.addEventListener('mouseup', () => { keys[code] = false; });
+        el.addEventListener('mouseleave', () => { keys[code] = false; });
+        el.addEventListener('touchstart', (ev) => { ev.preventDefault(); keys[code] = true; });
+        el.addEventListener('touchend', () => { keys[code] = false; });
+      };
+      bindHold('s3dLeft', 'ArrowLeft');
+      bindHold('s3dRight', 'ArrowRight');
+      bindHold('s3dFwd', 'ArrowUp');
+      bindHold('s3dBack', 'ArrowDown');
+      document.getElementById('s3dFire')?.addEventListener('click', shoot);
+
+      let rafId = 0;
+      const stepPx = 3;
+
+      function frame() {
+        if (!gameOver) {
+          const rotSpeed = 0.048;
+          const moveSpeed = 0.065;
+          if (keys['ArrowLeft'] || keys['KeyA']) pa -= rotSpeed;
+          if (keys['ArrowRight'] || keys['KeyD']) pa += rotSpeed;
+
+          let nx = px;
+          let ny = py;
+          if (keys['ArrowUp'] || keys['KeyW']) {
+            nx += Math.cos(pa) * moveSpeed;
+            ny += Math.sin(pa) * moveSpeed;
+          }
+          if (keys['ArrowDown'] || keys['KeyS']) {
+            nx -= Math.cos(pa) * moveSpeed;
+            ny -= Math.sin(pa) * moveSpeed;
+          }
+          if (map[Math.floor(ny)]?.[Math.floor(nx)] === 0) {
+            px = nx;
+            py = ny;
+          }
+
+          bots.forEach(b => {
+            if (!b.alive) return;
+            const dx = px - b.x;
+            const dy = py - b.y;
+            const d = Math.hypot(dx, dy);
+            if (d > 1.1) {
+              const tx = b.x + (dx / d) * 0.015;
+              const ty = b.y + (dy / d) * 0.015;
+              if (map[Math.floor(ty)]?.[Math.floor(tx)] === 0) {
+                b.x = tx;
+                b.y = ty;
+              }
+            } else if (Math.random() < 0.03) {
+              hp = Math.max(0, hp - 5);
+              playTone(140, 0.07, 'sawtooth', 80);
+              if (hp <= 0) {
+                gameOver = true;
+                onFinish(score);
+              }
+            }
+          });
+        }
+
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.fillStyle = '#09051a';
+        ctx.fillRect(0, 0, w, h / 2);
+        ctx.fillStyle = '#1b1636';
+        ctx.fillRect(0, h / 2, w, h / 2);
+
+        const fov = Math.PI / 3;
+        const zBuffer = new Float32Array(Math.ceil(w / stepPx));
+
+        for (let sx = 0, idx = 0; sx < w; sx += stepPx, idx++) {
+          const rayAngle = (pa - fov / 2) + (sx / w) * fov;
+          const eyeX = Math.cos(rayAngle);
+          const eyeY = Math.sin(rayAngle);
+          let dist = 0;
+          let hitVal = 0;
+          while (dist < 10) {
+            dist += 0.06;
+            const mx = Math.floor(px + eyeX * dist);
+            const my = Math.floor(py + eyeY * dist);
+            if (my < 0 || my >= 10 || mx < 0 || mx >= 10) {
+              hitVal = 1;
+              break;
+            }
+            if (map[my][mx] > 0) {
+              hitVal = map[my][mx];
+              break;
+            }
+          }
+          const corrDist = Math.max(0.15, dist * Math.cos(rayAngle - pa));
+          zBuffer[idx] = corrDist;
+          const wallH = Math.min(h, h / corrDist);
+          const shade = Math.max(35, Math.min(255, Math.floor(240 / (1 + corrDist * 0.25))));
+          ctx.fillStyle = hitVal === 2
+            ? `rgb(${shade}, 40, ${Math.min(255, shade + 60)})`
+            : `rgb(40, ${shade}, ${Math.min(255, shade + 40)})`;
+          ctx.fillRect(sx, (h - wallH) / 2, stepPx, wallH);
+        }
+
+        bots.forEach(b => {
+          if (!b.alive) return;
+          const dx = b.x - px;
+          const dy = b.y - py;
+          const dist = Math.hypot(dx, dy);
+          let ang = Math.atan2(dy, dx) - pa;
+          while (ang > Math.PI) ang -= Math.PI * 2;
+          while (ang < -Math.PI) ang += Math.PI * 2;
+          if (Math.abs(ang) < fov * 0.6 && dist > 0.3) {
+            const screenX = ((ang / fov) + 0.5) * w;
+            const size = Math.min(220, h / dist);
+            const midIdx = Math.floor(screenX / stepPx);
+            if (zBuffer[midIdx] === undefined || dist < zBuffer[midIdx]) {
+              ctx.fillStyle = '#ff2255';
+              ctx.fillRect(screenX - size * 0.25, h / 2 - size * 0.25, size * 0.5, size * 0.5);
+              ctx.fillStyle = '#ffff00';
+              ctx.fillRect(screenX - size * 0.14, h / 2 - size * 0.1, size * 0.08, size * 0.08);
+              ctx.fillRect(screenX + size * 0.06, h / 2 - size * 0.1, size * 0.08, size * 0.08);
+            }
+          }
+        });
+
+        // Crosshair & gun
+        ctx.strokeStyle = '#00ff66';
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 10, h / 2);
+        ctx.lineTo(w / 2 + 10, h / 2);
+        ctx.moveTo(w / 2, h / 2 - 10);
+        ctx.lineTo(w / 2, h / 2 + 10);
+        ctx.stroke();
+
+        const gunY = muzzleFlash > 0 ? h - 66 : h - 54;
+        ctx.fillStyle = muzzleFlash > 0 ? '#ffff00' : '#334466';
+        ctx.fillRect(w / 2 - 22, gunY, 44, 54);
+        if (muzzleFlash > 0) muzzleFlash--;
+
+        // Radar top-left
+        ctx.fillStyle = 'rgba(0,0,0,0.75)';
+        ctx.fillRect(8, 8, 74, 74);
+        for (let r = 0; r < 10; r++) {
+          for (let c = 0; c < 10; c++) {
+            if (map[r][c] > 0) {
+              ctx.fillStyle = '#00ffff';
+              ctx.fillRect(10 + c * 7, 10 + r * 7, 6, 6);
+            }
+          }
+        }
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(10 + px * 7 - 2, 10 + py * 7 - 2, 4, 4);
+        bots.forEach(b => {
+          if (b.alive) {
+            ctx.fillStyle = '#ff0055';
+            ctx.fillRect(10 + b.x * 7 - 2, 10 + b.y * 7 - 2, 4, 4);
+          }
+        });
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 13px monospace';
+        ctx.fillText(`HP: ${hp}%  SCORE: ${score}`, 92, 24);
+
+        if (gameOver) {
+          ctx.fillStyle = 'rgba(0,0,0,0.72)';
+          ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#ff3366';
+          ctx.font = 'bold 22px monospace';
+          ctx.fillText(`GAME OVER! SCORE: ${score}`, w / 2 - 135, h / 2);
+        }
+
+        rafId = requestAnimationFrame(frame);
+      }
+
+      rafId = requestAnimationFrame(frame);
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+      };
+    }
+
+    /* ------------------------------------------------------------------------
+       RACING GAME: TURBO DRIFT 2004
+       ------------------------------------------------------------------------ */
+    function runTurboDrift2004(stage, onScore, onFinish) {
+      stage.innerHTML = `
+        <canvas id="driftCanvas" width="440" height="340" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>
+        <div style="text-align:center; margin-top:8px; font-size:11.5px; color:var(--text-dim);">
+          Управляй машиной стрелками <strong>← / →</strong> или <strong>A / D</strong>, обгоняй трафик и собирай неоновые турбо-звёзды!
+        </div>
+      `;
+      const canvas = document.getElementById('driftCanvas');
+      const ctx = canvas.getContext('2d');
+      let carX = 200;
+      const carY = 275;
+      let speed = 4.2;
+      let score = 0;
+      let stripeOffset = 0;
+      let dead = false;
+      const keys = {};
+      const traffic = [];
+      const stars = [];
+
+      function spawnTraffic() {
+        const lanes = [105, 165, 225, 285];
+        traffic.push({
+          x: lanes[Math.floor(Math.random() * lanes.length)],
+          y: -55,
+          w: 34,
+          h: 56,
+          color: ['#ff2266', '#00ffff', '#ffcc00', '#aa44ff'][Math.floor(Math.random() * 4)]
+        });
+      }
+
+      function spawnStar() {
+        stars.push({
+          x: 95 + Math.random() * 240,
+          y: -25,
+          r: 10
+        });
+      }
+
+      spawnTraffic();
+      spawnStar();
+
+      const kd = (e) => { keys[e.code] = true; };
+      const ku = (e) => { keys[e.code] = false; };
+      window.addEventListener('keydown', kd);
+      window.addEventListener('keyup', ku);
+
+      let frameCount = 0;
+      let rafId = 0;
+
+      function loop() {
+        frameCount++;
+        if (!dead) {
+          if (keys['ArrowLeft'] || keys['KeyA']) carX -= 5.2;
+          if (keys['ArrowRight'] || keys['KeyD']) carX += 5.2;
+          carX = Math.max(82, Math.min(324, carX));
+
+          speed = 4.2 + Math.min(6, score / 150);
+          stripeOffset = (stripeOffset + speed * 2) % 40;
+
+          if (frameCount % 55 === 0) spawnTraffic();
+          if (frameCount % 85 === 0) spawnStar();
+
+          for (let i = traffic.length - 1; i >= 0; i--) {
+            const t = traffic[i];
+            t.y += speed + 1.2;
+            if (carX < t.x + t.w - 4 && carX + 34 > t.x + 4 && carY < t.y + t.h - 4 && carY + 56 > t.y + 4) {
+              dead = true;
+              playTone(130, 0.25, 'sawtooth', 50);
+              onFinish(score);
+              break;
+            }
+            if (t.y > canvas.height + 60) {
+              traffic.splice(i, 1);
+              score += 10;
+              onScore(score);
+              playTone(440, 0.04, 'triangle');
+            }
+          }
+
+          for (let i = stars.length - 1; i >= 0; i--) {
+            const s = stars[i];
+            s.y += speed;
+            if (Math.hypot((carX + 17) - s.x, (carY + 28) - s.y) < 26) {
+              stars.splice(i, 1);
+              score += 25;
+              onScore(score);
+              playTone(720, 0.08, 'square', 1050);
+            } else if (s.y > canvas.height + 30) {
+              stars.splice(i, 1);
+            }
+          }
+        }
+
+        ctx.fillStyle = '#0c1e12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#1b1c26';
+        ctx.fillRect(72, 0, 296, canvas.height);
+
+        ctx.strokeStyle = '#ff00cc';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(74, 0); ctx.lineTo(74, canvas.height);
+        ctx.moveTo(366, 0); ctx.lineTo(366, canvas.height);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#ffff00';
+        ctx.lineWidth = 2;
+        for (let laneX of [148, 220, 292]) {
+          for (let y = -40 + stripeOffset; y < canvas.height; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(laneX, y);
+            ctx.lineTo(laneX, y + 20);
+            ctx.stroke();
+          }
+        }
+
+        stars.forEach(s => {
+          ctx.fillStyle = '#00ffff';
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        traffic.forEach(t => {
+          ctx.fillStyle = t.color;
+          ctx.fillRect(t.x, t.y, t.w, t.h);
+          ctx.fillStyle = '#000';
+          ctx.fillRect(t.x + 5, t.y + 8, t.w - 10, 12);
+        });
+
+        // Player Y2K Drift Car
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(carX, carY, 34, 56);
+        ctx.fillStyle = '#111';
+        ctx.fillRect(carX + 5, carY + 10, 24, 14);
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(carX + 3, carY + 2, 7, 5);
+        ctx.fillRect(carX + 24, carY + 2, 7, 5);
+
+        if (dead) {
+          ctx.fillStyle = 'rgba(0,0,0,0.72)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#ff3366';
+          ctx.font = 'bold 20px monospace';
+          ctx.fillText(`CRASH! SCORE: ${score}`, 105, 170);
+        }
+
+        rafId = requestAnimationFrame(loop);
+      }
+
+      rafId = requestAnimationFrame(loop);
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener('keydown', kd);
+        window.removeEventListener('keyup', ku);
+      };
+    }
+
+    /* ------------------------------------------------------------------------
+       REMAINING 12 ARCADE GAMES
+       ------------------------------------------------------------------------ */
+    function runSnakeGame(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="snakeC" width="420" height="300" class="retro-canvas bevel-in" style="max-width:420px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('snakeC');
+      const ctx = c.getContext('2d');
+      const grid = 20;
+      let snake = [{ x: 10, y: 7 }];
+      let dir = { x: 1, y: 0 };
+      let food = { x: 15, y: 7 };
+      let score = 0;
+      let dead = false;
+
+      const kd = (e) => {
+        if ((e.code === 'ArrowUp' || e.code === 'KeyW') && dir.y !== 1) dir = { x: 0, y: -1 };
+        if ((e.code === 'ArrowDown' || e.code === 'KeyS') && dir.y !== -1) dir = { x: 0, y: 1 };
+        if ((e.code === 'ArrowLeft' || e.code === 'KeyA') && dir.x !== 1) dir = { x: -1, y: 0 };
+        if ((e.code === 'ArrowRight' || e.code === 'KeyD') && dir.x !== -1) dir = { x: 1, y: 0 };
+      };
+      window.addEventListener('keydown', kd);
+
+      const timer = setInterval(() => {
+        if (dead) return;
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+        if (head.x < 0 || head.y < 0 || head.x >= c.width / grid || head.y >= c.height / grid || snake.some(s => s.x === head.x && s.y === head.y)) {
+          dead = true;
+          playTone(140, 0.2, 'sawtooth', 60);
+          onFinish(score);
+          return;
+        }
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+          score += 10;
+          onScore(score);
+          playTone(620, 0.06, 'square', 880);
+          food = { x: Math.floor(Math.random() * (c.width / grid)), y: Math.floor(Math.random() * (c.height / grid)) };
+        } else {
+          snake.pop();
+        }
+        ctx.fillStyle = '#050510';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#ff00cc';
+        ctx.fillRect(food.x * grid + 2, food.y * grid + 2, grid - 4, grid - 4);
+        snake.forEach((seg, i) => {
+          ctx.fillStyle = i === 0 ? '#00ff66' : '#00cc55';
+          ctx.fillRect(seg.x * grid + 1, seg.y * grid + 1, grid - 2, grid - 2);
+        });
+      }, 115);
+
+      return () => {
+        clearInterval(timer);
+        window.removeEventListener('keydown', kd);
+      };
+    }
+
+    function runArkanoidGame(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="arkC" width="440" height="300" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('arkC');
+      const ctx = c.getContext('2d');
+      let padX = 180;
+      let bx = 220;
+      let by = 220;
+      let vx = 3.2;
+      let vy = -3.2;
+      let score = 0;
+      let ended = false;
+      const bricks = [];
+      for (let r = 0; r < 4; r++) {
+        for (let col = 0; col < 8; col++) {
+          bricks.push({ x: 14 + col * 52, y: 24 + r * 22, w: 46, h: 15, alive: true, color: ['#ff00cc', '#00ffff', '#ffff00', '#00ff66'][r] });
+        }
+      }
+      const mm = (e) => {
+        const rect = c.getBoundingClientRect();
+        padX = Math.max(0, Math.min(c.width - 76, e.clientX - rect.left - 38));
+      };
+      c.addEventListener('mousemove', mm);
+
+      let raf = 0;
+      function loop() {
+        if (!ended) {
+          bx += vx;
+          by += vy;
+          if (bx < 6 || bx > c.width - 6) vx = -vx;
+          if (by < 6) vy = -vy;
+          if (by > c.height - 22 && by < c.height - 10 && bx > padX && bx < padX + 76) {
+            vy = -Math.abs(vy);
+            playTone(480, 0.05, 'square');
+          }
+          bricks.forEach(b => {
+            if (!b.alive) return;
+            if (bx > b.x && bx < b.x + b.w && by > b.y && by < b.y + b.h) {
+              b.alive = false;
+              vy = -vy;
+              score += 15;
+              onScore(score);
+              playTone(640, 0.06, 'square');
+            }
+          });
+          if (bricks.every(b => !b.alive)) {
+            score += 50;
+            ended = true;
+            onFinish(score);
+          } else if (by > c.height + 10) {
+            ended = true;
+            onFinish(score);
+          }
+        }
+        ctx.fillStyle = '#070714';
+        ctx.fillRect(0, 0, c.width, c.height);
+        bricks.forEach(b => {
+          if (b.alive) {
+            ctx.fillStyle = b.color;
+            ctx.fillRect(b.x, b.y, b.w, b.h);
+          }
+        });
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(padX, c.height - 18, 76, 10);
+        ctx.fillStyle = '#ffff00';
+        ctx.beginPath();
+        ctx.arc(bx, by, 6, 0, Math.PI * 2);
+        ctx.fill();
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); c.removeEventListener('mousemove', mm); };
+    }
+
+    function runTetrisGame(stage, onScore, onFinish) {
+      stage.innerHTML = `
+        <div style="display:flex; justify-content:center; gap:12px; align-items:flex-start; flex-wrap:wrap;">
+          <canvas id="tetC" width="200" height="320" class="retro-canvas bevel-in" style="width:200px;"></canvas>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button class="y2k-btn" id="tetL">◀ Влево</button>
+            <button class="y2k-btn" id="tetR">▶ Вправо</button>
+            <button class="y2k-btn" id="tetRot">↻ Поворот</button>
+            <button class="y2k-btn y2k-btn-accent" id="tetD">▼ Вниз</button>
+          </div>
+        </div>
+      `;
+      const c = document.getElementById('tetC');
+      const ctx = c.getContext('2d');
+      const cols = 10;
+      const rows = 16;
+      const sz = 20;
+      const board = Array.from({ length: rows }, () => Array(cols).fill(0));
+      const shapes = [
+        [[1, 1, 1, 1]],
+        [[1, 1], [1, 1]],
+        [[0, 1, 0], [1, 1, 1]],
+        [[1, 1, 0], [0, 1, 1]]
+      ];
+      let piece = null;
+      let score = 0;
+      let over = false;
+
+      function spawn() {
+        const sh = shapes[Math.floor(Math.random() * shapes.length)];
+        piece = { m: sh, x: 3, y: 0, color: ['#00ffff', '#ffff00', '#ff00cc', '#00ff66'][Math.floor(Math.random() * 4)] };
+        if (collide(piece.m, piece.x, piece.y)) {
+          over = true;
+          onFinish(score);
+        }
+      }
+
+      function collide(m, px, py) {
+        for (let r = 0; r < m.length; r++) {
+          for (let col = 0; col < m[r].length; col++) {
+            if (!m[r][col]) continue;
+            const nx = px + col;
+            const ny = py + r;
+            if (nx < 0 || nx >= cols || ny >= rows) return true;
+            if (ny >= 0 && board[ny][nx]) return true;
+          }
+        }
+        return false;
+      }
+
+      function merge() {
+        piece.m.forEach((row, r) => row.forEach((v, col) => {
+          if (v && piece.y + r >= 0) board[piece.y + r][piece.x + col] = piece.color;
+        }));
+        for (let r = rows - 1; r >= 0; r--) {
+          if (board[r].every(Boolean)) {
+            board.splice(r, 1);
+            board.unshift(Array(cols).fill(0));
+            score += 40;
+            onScore(score);
+            playTone(760, 0.1, 'square');
+            r++;
+          }
+        }
+        spawn();
+      }
+
+      function stepDown() {
+        if (over || !piece) return;
+        if (!collide(piece.m, piece.x, piece.y + 1)) piece.y++;
+        else merge();
+      }
+
+      function rotatePiece() {
+        if (!piece) return;
+        const rot = piece.m[0].map((_, i) => piece.m.map(row => row[i]).reverse());
+        if (!collide(rot, piece.x, piece.y)) piece.m = rot;
+      }
+
+      const kd = (e) => {
+        if (over || !piece) return;
+        if (e.code === 'ArrowLeft' && !collide(piece.m, piece.x - 1, piece.y)) piece.x--;
+        if (e.code === 'ArrowRight' && !collide(piece.m, piece.x + 1, piece.y)) piece.x++;
+        if (e.code === 'ArrowUp') rotatePiece();
+        if (e.code === 'ArrowDown') stepDown();
+      };
+      window.addEventListener('keydown', kd);
+      document.getElementById('tetL')?.addEventListener('click', () => { if (!collide(piece.m, piece.x - 1, piece.y)) piece.x--; });
+      document.getElementById('tetR')?.addEventListener('click', () => { if (!collide(piece.m, piece.x + 1, piece.y)) piece.x++; });
+      document.getElementById('tetRot')?.addEventListener('click', rotatePiece);
+      document.getElementById('tetD')?.addEventListener('click', stepDown);
+
+      spawn();
+      const iv = setInterval(() => {
+        stepDown();
+        ctx.fillStyle = '#090914';
+        ctx.fillRect(0, 0, c.width, c.height);
+        for (let r = 0; r < rows; r++) {
+          for (let col = 0; col < cols; col++) {
+            if (board[r][col]) {
+              ctx.fillStyle = board[r][col];
+              ctx.fillRect(col * sz + 1, r * sz + 1, sz - 2, sz - 2);
+            }
+          }
+        }
+        if (piece) {
+          ctx.fillStyle = piece.color;
+          piece.m.forEach((row, r) => row.forEach((v, col) => {
+            if (v) ctx.fillRect((piece.x + col) * sz + 1, (piece.y + r) * sz + 1, sz - 2, sz - 2);
+          }));
+        }
+      }, 420);
+
+      return () => { clearInterval(iv); window.removeEventListener('keydown', kd); };
+    }
+
+    function runMinesweeperGame(stage, onScore, onFinish) {
+      const size = 8;
+      const minesCount = 10;
+      const grid = Array.from({ length: size }, () => Array.from({ length: size }, () => ({ mine: false, open: false, flag: false, n: 0 })));
+      let placed = 0;
+      while (placed < minesCount) {
+        const r = Math.floor(Math.random() * size);
+        const c = Math.floor(Math.random() * size);
+        if (!grid[r][c].mine) { grid[r][c].mine = true; placed++; }
+      }
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          let cnt = 0;
+          for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+            if (grid[r + dr]?.[c + dc]?.mine) cnt++;
+          }
+          grid[r][c].n = cnt;
+        }
+      }
+
+      stage.innerHTML = `<div id="msGrid" style="display:grid; grid-template-columns:repeat(${size}, 34px); gap:2px; justify-content:center;"></div>`;
+      const box = document.getElementById('msGrid');
+      let openedCount = 0;
+
+      function renderBoard(revealMines = false) {
+        box.innerHTML = '';
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            const cell = grid[r][c];
+            const btn = document.createElement('button');
+            btn.className = cell.open ? 'bevel-in' : 'bevel-out';
+            btn.style.cssText = 'width:34px; height:34px; font-weight:bold; font-size:13px; cursor:pointer; background:' + (cell.open ? '#222' : 'var(--win-bg)') + '; color:' + (cell.open ? '#00ff66' : '#000');
+            if (revealMines && cell.mine) btn.textContent = '💣';
+            else if (cell.open) btn.textContent = cell.mine ? '💥' : (cell.n || '');
+            else if (cell.flag) btn.textContent = '🚩';
+
+            btn.addEventListener('click', () => {
+              if (cell.open || cell.flag) return;
+              cell.open = true;
+              if (cell.mine) {
+                playTone(120, 0.25, 'sawtooth', 40);
+                renderBoard(true);
+                onFinish(openedCount * 10);
+              } else {
+                openedCount++;
+                onScore(openedCount * 10);
+                playTone(540, 0.04);
+                renderBoard(false);
+                if (openedCount === size * size - minesCount) {
+                  onFinish(openedCount * 10 + 50);
+                }
+              }
+            });
+
+            btn.addEventListener('contextmenu', (ev) => {
+              ev.preventDefault();
+              if (!cell.open) {
+                cell.flag = !cell.flag;
+                renderBoard(false);
+              }
+            });
+            box.appendChild(btn);
+          }
+        }
+      }
+      renderBoard(false);
+      return null;
+    }
+
+    function runPongVsZuzu(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="pongC" width="440" height="280" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('pongC');
+      const ctx = c.getContext('2d');
+      let py = 110;
+      let aiY = 110;
+      let bx = 220;
+      let by = 140;
+      let vx = 3.5;
+      let vy = 2.6;
+      let pScore = 0;
+      let aiScore = 0;
+
+      const mm = (e) => {
+        const rect = c.getBoundingClientRect();
+        py = Math.max(0, Math.min(c.height - 60, e.clientY - rect.top - 30));
+      };
+      c.addEventListener('mousemove', mm);
+
+      let raf = 0;
+      function loop() {
+        bx += vx;
+        by += vy;
+        if (by < 6 || by > c.height - 6) vy = -vy;
+        if (aiY + 30 < by) aiY += 2.7;
+        else aiY -= 2.7;
+
+        if (bx < 24 && by > py && by < py + 60) {
+          vx = Math.abs(vx) * 1.04;
+          pScore += 10;
+          onScore(pScore);
+          playTone(520, 0.05, 'square');
+        }
+        if (bx > c.width - 24 && by > aiY && by < aiY + 60) {
+          vx = -Math.abs(vx);
+          playTone(360, 0.05, 'square');
+        }
+        if (bx < 0) {
+          aiScore++;
+          bx = 220; by = 140; vx = 3.5;
+          if (aiScore >= 5) { onFinish(pScore); return; }
+        }
+        if (bx > c.width) {
+          pScore += 20;
+          onScore(pScore);
+          bx = 220; by = 140; vx = -3.5;
+        }
+
+        ctx.fillStyle = '#070514';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(10, py, 10, 60);
+        ctx.fillStyle = '#ff00cc';
+        ctx.fillRect(c.width - 20, aiY, 10, 60);
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(bx - 5, by - 5, 10, 10);
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px monospace';
+        ctx.fillText(`YOU: ${pScore}   ZU-ZU: ${aiScore}`, 150, 20);
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); c.removeEventListener('mousemove', mm); };
+    }
+
+    function runDinoY2K(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="dinoC" width="440" height="240" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('dinoC');
+      const ctx = c.getContext('2d');
+      let dy = 180;
+      let vy = 0;
+      let obsX = 440;
+      let score = 0;
+      let dead = false;
+
+      function jump() {
+        if (dy >= 178 && !dead) {
+          vy = -9.8;
+          playTone(460, 0.07, 'square', 740);
+        }
+      }
+      const kd = (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); } };
+      window.addEventListener('keydown', kd);
+      c.addEventListener('click', jump);
+
+      let raf = 0;
+      function loop() {
+        if (!dead) {
+          vy += 0.55;
+          dy += vy;
+          if (dy > 180) { dy = 180; vy = 0; }
+          obsX -= 5.2;
+          if (obsX < -20) {
+            obsX = 440 + Math.random() * 120;
+            score += 15;
+            onScore(score);
+          }
+          if (obsX < 74 && obsX > 36 && dy > 154) {
+            dead = true;
+            playTone(140, 0.2, 'sawtooth', 50);
+            onFinish(score);
+          }
+        }
+        ctx.fillStyle = '#0c0820';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(0, 206, c.width, 3);
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(46, dy, 26, 26);
+        ctx.fillStyle = '#ff00cc';
+        ctx.fillRect(obsX, 178, 20, 28);
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); window.removeEventListener('keydown', kd); };
+    }
+
+    function runSpaceInvaders(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="invC" width="440" height="280" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('invC');
+      const ctx = c.getContext('2d');
+      let sx = 205;
+      let dir = 1.3;
+      let score = 0;
+      let ended = false;
+      const bullets = [];
+      const enemies = [];
+      for (let r = 0; r < 3; r++) for (let col = 0; col < 7; col++) enemies.push({ x: 50 + col * 48, y: 26 + r * 28, alive: true });
+
+      const kd = (e) => {
+        if (e.code === 'Space' && !ended) {
+          e.preventDefault();
+          bullets.push({ x: sx + 14, y: 242 });
+          playTone(820, 0.05, 'square', 300);
+        }
+      };
+      const mm = (e) => {
+        const rect = c.getBoundingClientRect();
+        sx = Math.max(0, Math.min(c.width - 30, e.clientX - rect.left - 15));
+      };
+      window.addEventListener('keydown', kd);
+      c.addEventListener('mousemove', mm);
+
+      let raf = 0;
+      function loop() {
+        if (!ended) {
+          let edge = false;
+          enemies.forEach(en => {
+            if (!en.alive) return;
+            en.x += dir;
+            if (en.x < 10 || en.x > c.width - 34) edge = true;
+            if (en.y > 225) { ended = true; onFinish(score); }
+          });
+          if (edge) {
+            dir = -dir;
+            enemies.forEach(en => { if (en.alive) en.y += 10; });
+          }
+          for (let i = bullets.length - 1; i >= 0; i--) {
+            bullets[i].y -= 6;
+            if (bullets[i].y < 0) { bullets.splice(i, 1); continue; }
+            for (const en of enemies) {
+              if (en.alive && bullets[i].x > en.x && bullets[i].x < en.x + 26 && bullets[i].y > en.y && bullets[i].y < en.y + 18) {
+                en.alive = false;
+                bullets.splice(i, 1);
+                score += 20;
+                onScore(score);
+                playTone(300, 0.06, 'square', 650);
+                break;
+              }
+            }
+          }
+          if (enemies.every(en => !en.alive)) { ended = true; onFinish(score + 50); }
+        }
+        ctx.fillStyle = '#050512';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(sx, 250, 30, 12);
+        ctx.fillStyle = '#ffff00';
+        bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 10));
+        ctx.fillStyle = '#ff22aa';
+        enemies.forEach(en => { if (en.alive) ctx.fillRect(en.x, en.y, 26, 18); });
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); window.removeEventListener('keydown', kd); c.removeEventListener('mousemove', mm); };
+    }
+
+    function runFlappyCat(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="flpC" width="420" height="280" class="retro-canvas bevel-in" style="max-width:420px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('flpC');
+      const ctx = c.getContext('2d');
+      let cy = 120;
+      let vy = 0;
+      let px = 420;
+      let gapY = 120;
+      let score = 0;
+      let dead = false;
+
+      function flap() {
+        if (!dead) { vy = -6.8; playTone(560, 0.06, 'triangle', 780); }
+      }
+      c.addEventListener('click', flap);
+      const kd = (e) => { if (e.code === 'Space') { e.preventDefault(); flap(); } };
+      window.addEventListener('keydown', kd);
+
+      let raf = 0;
+      function loop() {
+        if (!dead) {
+          vy += 0.38;
+          cy += vy;
+          px -= 3.4;
+          if (px < -40) {
+            px = 420;
+            gapY = 60 + Math.random() * 130;
+            score += 10;
+            onScore(score);
+          }
+          if (cy < 0 || cy > c.height - 20 || (px < 85 && px > 45 && (cy < gapY - 42 || cy > gapY + 42))) {
+            dead = true;
+            onFinish(score);
+          }
+        }
+        ctx.fillStyle = '#11072b';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ff66';
+        ctx.fillRect(px, 0, 36, gapY - 42);
+        ctx.fillRect(px, gapY + 42, 36, c.height);
+        ctx.fillStyle = '#ffcc00';
+        ctx.fillRect(60, cy, 20, 20);
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); window.removeEventListener('keydown', kd); };
+    }
+
+    function runMemoryMatrix(stage, onScore, onFinish) {
+      stage.innerHTML = `
+        <div style="text-align:center;">
+          <div id="memStatus" style="margin-bottom:8px; font-weight:bold;">Запоминай последовательность...</div>
+          <div id="memPad" style="display:grid; grid-template-columns:repeat(2, 90px); gap:8px; justify-content:center;"></div>
+        </div>
+      `;
+      const colors = ['#ff0066', '#00ffff', '#ffff00', '#00ff66'];
+      const pad = document.getElementById('memPad');
+      const st = document.getElementById('memStatus');
+      let seq = [];
+      let userIdx = 0;
+      let score = 0;
+      let locked = true;
+
+      const btns = colors.map((col, i) => {
+        const b = document.createElement('button');
+        b.style.cssText = `height:80px; background:${col}; opacity:0.65; border:2px solid #fff; cursor:pointer;`;
+        b.addEventListener('click', () => {
+          if (locked) return;
+          playTone(400 + i * 120, 0.09, 'square');
+          if (i === seq[userIdx]) {
+            userIdx++;
+            if (userIdx === seq.length) {
+              score += 20;
+              onScore(score);
+              nextRound();
+            }
+          } else {
+            locked = true;
+            onFinish(score);
+          }
+        });
+        pad.appendChild(b);
+        return b;
+      });
+
+      function flash(idx, cb) {
+        btns[idx].style.opacity = '1';
+        playTone(400 + idx * 120, 0.14, 'triangle');
+        setTimeout(() => { btns[idx].style.opacity = '0.65'; if (cb) cb(); }, 280);
+      }
+
+      function nextRound() {
+        locked = true;
+        userIdx = 0;
+        seq.push(Math.floor(Math.random() * 4));
+        st.textContent = `Раунд ${seq.length}: смотри внимательно`;
+        let k = 0;
+        const iv = setInterval(() => {
+          flash(seq[k]);
+          k++;
+          if (k >= seq.length) {
+            clearInterval(iv);
+            locked = false;
+            st.textContent = 'Твой ход!';
+          }
+        }, 430);
+      }
+
+      nextRound();
+      return null;
+    }
+
+    function runAimClicker(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="aimC" width="440" height="260" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto; cursor:crosshair;"></canvas>`;
+      const c = document.getElementById('aimC');
+      const ctx = c.getContext('2d');
+      let tx = 220;
+      let ty = 130;
+      let score = 0;
+      let timeLeft = 15;
+
+      c.addEventListener('click', (e) => {
+        const rect = c.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        if (Math.hypot(mx - tx, my - ty) < 24) {
+          score += 10;
+          onScore(score);
+          playTone(740, 0.05, 'square');
+          tx = 35 + Math.random() * (c.width - 70);
+          ty = 35 + Math.random() * (c.height - 70);
+        }
+      });
+
+      const iv = setInterval(() => {
+        timeLeft--;
+        ctx.fillStyle = '#090918';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#ff2266';
+        ctx.beginPath();
+        ctx.arc(tx, ty, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffff00';
+        ctx.beginPath();
+        ctx.arc(tx, ty, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 13px monospace';
+        ctx.fillText(`TIME: ${timeLeft}s`, 12, 22);
+        if (timeLeft <= 0) {
+          clearInterval(iv);
+          onFinish(score);
+        }
+      }, 1000);
+
+      return () => clearInterval(iv);
+    }
+
+    function runCyberPongGame(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="cpC" width="440" height="260" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('cpC');
+      const ctx = c.getContext('2d');
+      let px = 190;
+      let bx = 220;
+      let by = 60;
+      let vx = 3.6;
+      let vy = 3.4;
+      let score = 0;
+      let dead = false;
+
+      const mm = (e) => {
+        const rect = c.getBoundingClientRect();
+        px = Math.max(0, Math.min(c.width - 80, e.clientX - rect.left - 40));
+      };
+      c.addEventListener('mousemove', mm);
+
+      let raf = 0;
+      function loop() {
+        if (!dead) {
+          bx += vx;
+          by += vy;
+          if (bx < 8 || bx > c.width - 8) vx = -vx;
+          if (by < 8) vy = Math.abs(vy);
+          if (by > c.height - 24 && by < c.height - 12 && bx > px && bx < px + 80) {
+            vy = -Math.abs(vy) * 1.03;
+            score += 10;
+            onScore(score);
+            playTone(600, 0.05, 'square');
+          }
+          if (by > c.height + 10) {
+            dead = true;
+            onFinish(score);
+          }
+        }
+        ctx.fillStyle = '#050b18';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(px, c.height - 18, 80, 10);
+        ctx.fillStyle = '#ff00cc';
+        ctx.beginPath();
+        ctx.arc(bx, by, 8, 0, Math.PI * 2);
+        ctx.fill();
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); c.removeEventListener('mousemove', mm); };
+    }
+
+    function runMeteorBlaster(stage, onScore, onFinish) {
+      stage.innerHTML = `<canvas id="mbC" width="440" height="280" class="retro-canvas bevel-in" style="max-width:440px; margin:0 auto;"></canvas>`;
+      const c = document.getElementById('mbC');
+      const ctx = c.getContext('2d');
+      let sx = 205;
+      let score = 0;
+      let dead = false;
+      const lasers = [];
+      const meteors = [{ x: 120, y: -20, r: 16 }, { x: 290, y: -70, r: 18 }];
+
+      const mm = (e) => {
+        const rect = c.getBoundingClientRect();
+        sx = Math.max(10, Math.min(c.width - 30, e.clientX - rect.left - 15));
+      };
+      const shoot = () => {
+        if (!dead) { lasers.push({ x: sx + 14, y: 240 }); playTone(880, 0.04, 'square', 420); }
+      };
+      c.addEventListener('mousemove', mm);
+      c.addEventListener('click', shoot);
+
+      let raf = 0;
+      function loop() {
+        if (!dead) {
+          for (let i = lasers.length - 1; i >= 0; i--) {
+            lasers[i].y -= 6.5;
+            if (lasers[i].y < 0) lasers.splice(i, 1);
+          }
+          meteors.forEach(m => {
+            m.y += 2.4;
+            if (m.y > c.height + 20) {
+              m.y = -20;
+              m.x = 30 + Math.random() * (c.width - 60);
+            }
+            if (Math.hypot((sx + 15) - m.x, 255 - m.y) < m.r + 12) {
+              dead = true;
+              onFinish(score);
+            }
+            for (let i = lasers.length - 1; i >= 0; i--) {
+              if (Math.hypot(lasers[i].x - m.x, lasers[i].y - m.y) < m.r + 5) {
+                lasers.splice(i, 1);
+                m.y = -20;
+                m.x = 30 + Math.random() * (c.width - 60);
+                score += 15;
+                onScore(score);
+                playTone(320, 0.07, 'sawtooth', 120);
+                break;
+              }
+            }
+          });
+        }
+        ctx.fillStyle = '#060312';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(sx, 248, 30, 14);
+        ctx.fillStyle = '#ffff00';
+        lasers.forEach(l => ctx.fillRect(l.x, l.y, 4, 12));
+        ctx.fillStyle = '#ff6600';
+        meteors.forEach(m => {
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+      return () => { cancelAnimationFrame(raf); c.removeEventListener('mousemove', mm); c.removeEventListener('click', shoot); };
+    }
+
+    const GAME_RUNNERS = {
+      strike3d: runCyberStrike3D,
+      drift: runTurboDrift2004,
+      cyberpong: runCyberPongGame,
+      blaster: runMeteorBlaster,
+      snake: runSnakeGame,
+      arkanoid: runArkanoidGame,
+      tetris: runTetrisGame,
+      minesweeper: runMinesweeperGame,
+      pong: runPongVsZuzu,
+      dino: runDinoY2K,
+      invaders: runSpaceInvaders,
+      flappy: runFlappyCat,
+      memory: runMemoryMatrix,
+      aim: runAimClicker
+    };
+
+    /* ========================================================================
+       MODULE 5: PET SHOP & FUN ARTIFACTS (lab://shop)
+       ======================================================================== */
+    function renderPetShop(container) {
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🐾 ЗООМАГАЗИН ПИТОМЦЕВ & ЛАВКА Y2K</span>
+              <span>БАЛАНС: ${appState.xp} XP</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px; margin-bottom:12px;">
+              ${PET_CATALOG.map(pet => {
+                const owned = appState.ownedPets.includes(pet.id);
+                const active = appState.activePetId === pet.id;
+                return `
+                  <div class="pet-card-item bevel-out">
+                    <div>
+                      <div style="font-size:14px; font-weight:bold; color:var(--accent-1);">${escapeHtml(pet.name)}</div>
+                      <div style="font-size:11px; color:var(--accent-2);">${escapeHtml(pet.species)}</div>
+                      <div style="font-size:11.5px; color:var(--text-dim); margin-top:5px;">${escapeHtml(pet.desc)}</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <span class="retro-badge">${pet.price === 0 ? 'БЕСПЛАТНО' : pet.price + ' XP'}</span>
+                      ${active
+                        ? `<span class="retro-badge" style="color:#ffff00;">ГУЛЯЕТ</span>`
+                        : owned
+                          ? `<button class="y2k-btn y2k-btn-accent pet-equip-btn" data-pet="${pet.id}">Выпустить</button>`
+                          : `<button class="y2k-btn y2k-btn-warn pet-buy-btn" data-pet="${pet.id}">Завести</button>`
+                      }
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="contrast-panel bevel-in" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button id="shopFeedBtn" class="y2k-btn y2k-btn-accent">🐟 Угостить питомца (+5 XP)</button>
+              <button id="shopFanfareBtn" class="y2k-btn">🎉 Врубить фанфары (+10 XP)</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.querySelectorAll('.pet-buy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pet = PET_CATALOG.find(p => p.id === btn.dataset.pet);
+          if (!pet) return;
+          if ((appState.xp || 0) < pet.price) {
+            showToast('Не хватает XP! Поиграй в игры или пройди квиз.');
+            return;
+          }
+          appState.xp -= pet.price;
+          appState.ownedPets.push(pet.id);
+          appState.activePetId = pet.id;
+          saveState();
+          updateTopStats();
+          renderTaskbarPet();
+          playTone(640, 0.1, 'square', 960);
+          zuzuSay(`Ура! Новый друг ${pet.name} теперь гуляет по панели задач! 🐾✨`, 'love');
+          renderPetShop(container);
+        });
+      });
+
+      container.querySelectorAll('.pet-equip-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          appState.activePetId = btn.dataset.pet;
+          saveState();
+          renderTaskbarPet();
+          playTone(520, 0.06);
+          renderPetShop(container);
+        });
+      });
+
+      document.getElementById('shopFeedBtn')?.addEventListener('click', feedTheCat);
+      document.getElementById('shopFanfareBtn')?.addEventListener('click', () => {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => setTimeout(() => playTone(f, 0.1, 'square'), idx * 80));
+        spawnCatHearts('★', '#ffff00');
+        grantXP(10, 'Y2K Фанфары');
+      });
+    }
+
+    /* ========================================================================
+       MODULE 6: WINAMP MEDIA LAB (lab://winamp)
+       ======================================================================== */
+    function renderWinamp(container) {
+      let beatTimer = null;
+      let step = 0;
+      const notes = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 440.0, 493.88];
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header">
+              <span>🎛️ WINAMP 2.95 // SYNTH & VISUALIZER</span>
+              <span>STEREO 44.1 kHz</span>
+            </div>
+            <canvas id="winampCanvas" width="520" height="170" class="retro-canvas bevel-in" style="max-height:180px; margin-bottom:10px;"></canvas>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button id="waPlayBtn" class="y2k-btn y2k-btn-accent">▶ Запустить бит (+10 XP)</button>
+              <button id="waStopBtn" class="y2k-btn">⏹ Стоп</button>
+              <span style="font-size:12px; color:var(--text-dim);">Пресет: <strong>Y2K Trance Arpeggio</strong></span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const canvas = document.getElementById('winampCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function drawBars(energy = 0.25) {
+        ctx.fillStyle = '#04040e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const bars = 28;
+        const bw = (canvas.width - 40) / bars;
+        for (let i = 0; i < bars; i++) {
+          const val = Math.min(1, Math.max(0.08, (Math.sin(i * 0.5 + step) * 0.4 + 0.5) * energy + Math.random() * 0.25));
+          const bh = val * (canvas.height - 24);
+          ctx.fillStyle = val > 0.75 ? '#ff00cc' : (val > 0.45 ? '#ffff00' : '#00ff66');
+          ctx.fillRect(20 + i * bw, canvas.height - 12 - bh, bw - 3, bh);
+        }
+      }
+      drawBars(0.2);
+
+      document.getElementById('waPlayBtn')?.addEventListener('click', () => {
+        if (beatTimer) clearInterval(beatTimer);
+        grantXP(10, 'Запуск Winamp бита');
+        beatTimer = setInterval(() => {
+          step++;
+          playTone(notes[step % notes.length], 0.09, 'sawtooth');
+          if (step % 2 === 0) playTone(110, 0.09, 'sine', 45);
+          drawBars(0.95);
+        }, 160);
+      });
+
+      document.getElementById('waStopBtn')?.addEventListener('click', () => {
+        if (beatTimer) clearInterval(beatTimer);
+        beatTimer = null;
+        drawBars(0.15);
+      });
+
+      cleanupModule = () => {
+        if (beatTimer) clearInterval(beatTimer);
+      };
+    }
+
+    /* ========================================================================
+       MODULE 7: WORKING CD-ROM QUIZ (lab://cdrom)
+       ======================================================================== */
+    function renderCDRomQuiz(container) {
+      const questions = [
+        {
+          q: 'Какой плеер стал символом кастомных скинов в конце 1990-х и начале 2000-х?',
+          opts: ['Winamp', 'iTunes 2020', 'VLC Mobile'],
+          ans: 0
+        },
+        {
+          q: 'Что в вебе обозначает «Y2K»?',
+          opts: ['Проблему 2000 года и эстетику рубежа веков', 'Формат сжатия видео', 'Протокол Wi-Fi 6'],
+          ans: 0
+        },
+        {
+          q: 'Какая техника рендеринга использовалась в ранних 3D-шутерах вроде Wolfenstein 3D?',
+          opts: ['Raycasting', 'Path Tracing на GPU', 'Векторный SVG'],
+          ans: 0
+        },
+        {
+          q: 'Какой метод браузера сохраняет данные между перезагрузками страницы без сервера?',
+          opts: ['localStorage', 'sessionOnlyRam', 'document.cookieOnly'],
+          ans: 0
+        }
+      ];
+
+      let idx = 0;
+      let rightCount = 0;
+      let feedback = '';
+
+      function paint() {
+        if (idx >= questions.length) {
+          container.innerHTML = `
+            <div class="y2k-container">
+              <div class="win-box bevel-out">
+                <div class="win-box-header"><span>💿 CD-ROM КВИЗ // РЕЗУЛЬТАТ</span><span>ЗАВЕРШЕНО</span></div>
+                <div class="contrast-panel bevel-in" style="text-align:center; padding:18px;">
+                  <div style="font-size:18px; font-weight:bold; color:var(--accent-1);">Правильных ответов: ${rightCount} из ${questions.length}!</div>
+                  <p style="font-size:12.5px; color:var(--text-dim);">Отличный результат, ${escapeHtml(appState.userName)}!</p>
+                  <button id="quizRetryBtn" class="y2k-btn y2k-btn-accent">↻ Пройти ещё раз</button>
+                </div>
+              </div>
+            </div>
+          `;
+          document.getElementById('quizRetryBtn')?.addEventListener('click', () => {
+            idx = 0;
+            rightCount = 0;
+            feedback = '';
+            paint();
+          });
+          return;
+        }
+
+        const item = questions[idx];
+        container.innerHTML = `
+          <div class="y2k-container">
+            <div class="win-box bevel-out">
+              <div class="win-box-header">
+                <span>💿 CD-ROM ЭНЦИКЛОПЕДИЯ // КВИЗ</span>
+                <span>ВОПРОС ${idx + 1} / ${questions.length}</span>
+              </div>
+              <div class="contrast-panel bevel-in">
+                <div style="font-size:15px; font-weight:bold; margin-bottom:10px;">${escapeHtml(item.q)}</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  ${item.opts.map((o, oi) => `<button class="y2k-btn quiz-opt-btn" data-oi="${oi}" style="text-align:left; padding:8px;">${escapeHtml(o)}</button>`).join('')}
+                </div>
+                ${feedback ? `<div style="margin-top:10px; font-weight:bold; color:var(--accent-1);">${escapeHtml(feedback)}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const chosen = Number(btn.dataset.oi);
+            if (chosen === item.ans) {
+              rightCount++;
+              feedback = '✅ Верно! +20 XP';
+              playTone(680, 0.08, 'square', 960);
+              grantXP(20, 'Верный ответ в квизе');
+            } else {
+              feedback = `❌ Мимо! Правильный ответ: ${item.opts[item.ans]}`;
+              playTone(180, 0.12, 'sawtooth', 90);
+            }
+            paint();
+            setTimeout(() => {
+              idx++;
+              feedback = '';
+              paint();
+            }, 850);
+          });
+        });
+      }
+
+      paint();
+    }
+
+    /* ========================================================================
+       MODULE 8: PIXEL PAINT 2000 (lab://paint)
+       ======================================================================== */
+    function renderPixelPaint(container) {
+      const palette = ['#00ff66', '#ff00cc', '#00ffff', '#ffff00', '#ff5500', '#ffffff', '#111122'];
+      let curColor = '#00ff66';
+      let isDrawing = false;
+
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header"><span>🎨 PIXEL PAINT 2000 // 16×16</span><span>ХОЛСТ СОХРАНЯЕТСЯ</span></div>
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+              ${palette.map(col => `<button class="y2k-btn px-col-btn" data-col="${col}" style="background:${col}; width:26px; height:26px; padding:0;"></button>`).join('')}
+              <button id="pxClearBtn" class="y2k-btn">🧹 Очистить</button>
+              <button id="pxXpBtn" class="y2k-btn y2k-btn-accent">💾 Зафиксировать арт (+10 XP)</button>
+            </div>
+            <div id="pxBoard" class="pixel-board"></div>
+          </div>
+        </div>
+      `;
+
+      const board = document.getElementById('pxBoard');
+      function drawBoard() {
+        board.innerHTML = '';
+        appState.pixelCanvas.forEach((col, i) => {
+          const cell = document.createElement('div');
+          cell.className = 'px-cell';
+          cell.style.background = col;
+          const paintCell = () => {
+            appState.pixelCanvas[i] = curColor;
+            cell.style.background = curColor;
+            saveState();
+          };
+          cell.addEventListener('mousedown', () => { isDrawing = true; paintCell(); });
+          cell.addEventListener('mouseenter', () => { if (isDrawing) paintCell(); });
+          board.appendChild(cell);
+        });
+      }
+      const stopDraw = () => { isDrawing = false; };
+      window.addEventListener('mouseup', stopDraw);
+
+      container.querySelectorAll('.px-col-btn').forEach(b => {
+        b.addEventListener('click', () => { curColor = b.dataset.col; playTone(500, 0.04); });
+      });
+      document.getElementById('pxClearBtn')?.addEventListener('click', () => {
+        appState.pixelCanvas = Array(256).fill('#111122');
+        saveState();
+        drawBoard();
+      });
+      document.getElementById('pxXpBtn')?.addEventListener('click', () => {
+        grantXP(10, 'Пиксель-арт шедевр');
+      });
+
+      drawBoard();
+      cleanupModule = () => window.removeEventListener('mouseup', stopDraw);
+    }
+
+    /* ========================================================================
+       MODULE 9: HACKER TERMINAL (lab://terminal)
+       ======================================================================== */
+    function renderTerminal(container) {
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header"><span>💻 HACKER TERMINAL // Y2K SHELL</span><span>root@digital-lab</span></div>
+            <div id="termOut" class="hacker-term bevel-in" style="margin-bottom:8px;">
+              <div>Введите <strong>help</strong> для списка команд (help, stats, cat, matrix, bonus, clear).</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <input id="termInp" type="text" class="bevel-in" placeholder="Например: bonus или matrix..." style="flex:1; padding:6px; background:#000; color:#00ff41; font-family:var(--font-pixel);" />
+              <button id="termRunBtn" class="y2k-btn y2k-btn-accent">Выполнить</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const out = document.getElementById('termOut');
+      const inp = document.getElementById('termInp');
+      function printLine(txt) {
+        const d = document.createElement('div');
+        d.textContent = txt;
+        out.appendChild(d);
+        out.scrollTop = out.scrollHeight;
+      }
+
+      function runCmd() {
+        const cmd = (inp?.value || '').trim().toLowerCase();
+        if (!cmd) return;
+        if (inp) inp.value = '';
+        printLine(`> ${cmd}`);
+        if (cmd === 'help') printLine('Команды: help, stats, cat, matrix, bonus, clear');
+        else if (cmd === 'stats') printLine(`USER: ${appState.userName} (#${appState.userId}) | XP: ${appState.xp}`);
+        else if (cmd === 'cat') { petTheCat('terminal'); printLine('Котик на панели задач получил порцию ласки!'); }
+        else if (cmd === 'matrix') { applyTheme('theme-matrix'); printLine('Тема переключена на MATRIX.'); }
+        else if (cmd === 'bonus') { grantXP(15, 'Терминал-бонус'); printLine('Начислено +15 XP!'); }
+        else if (cmd === 'clear') out.innerHTML = '';
+        else printLine('Неизвестная команда. Напиши help.');
+      }
+
+      document.getElementById('termRunBtn')?.addEventListener('click', runCmd);
+      inp?.addEventListener('keydown', (e) => { if (e.key === 'Enter') runCmd(); });
+    }
+
+    /* ========================================================================
+       MODULE 10: DEMOTIVATOR MEME LAB (lab://memes)
+       ======================================================================== */
+    function renderMemeLab(container) {
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header"><span>🖼️ ДЕМОТИВАТОР ЛАБ 2004</span><span>КЛАССИКА ЖАНРА</span></div>
+            <div class="contrast-panel bevel-in" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+              <input id="memeTitleInp" type="text" class="bevel-in" value="КОГДА ЗАПУСТИЛ CYBER STRIKE 3D" style="flex:1; min-width:170px; padding:6px; background:#fff; color:#000;" />
+              <input id="memeSubInp" type="text" class="bevel-in" value="И забыл про реальный мир" style="flex:1; min-width:170px; padding:6px; background:#fff; color:#000;" />
+              <button id="memePostBtn" class="y2k-btn y2k-btn-accent">📌 В гостевую (+10 XP)</button>
+            </div>
+            <div class="meme-box" style="padding:20px; text-align:center; max-width:440px; margin:0 auto;">
+              <div style="border:2px solid #fff; padding:18px; margin-bottom:12px; font-size:42px;">🕹️😎🔥</div>
+              <div id="memePrevTitle" style="color:#fff; font-size:20px; font-family:var(--font-pixel); letter-spacing:1px;">КОГДА ЗАПУСТИЛ CYBER STRIKE 3D</div>
+              <div id="memePrevSub" style="color:#ccc; font-size:12px; margin-top:6px;">И забыл про реальный мир</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const tInp = document.getElementById('memeTitleInp');
+      const sInp = document.getElementById('memeSubInp');
+      const sync = () => {
+        const pt = document.getElementById('memePrevTitle');
+        const ps = document.getElementById('memePrevSub');
+        if (pt) pt.textContent = (tInp?.value || '').toUpperCase();
+        if (ps) ps.textContent = sInp?.value || '';
+      };
+      tInp?.addEventListener('input', sync);
+      sInp?.addEventListener('input', sync);
+      document.getElementById('memePostBtn')?.addEventListener('click', () => {
+        appState.guestbook.unshift({
+          author: `${appState.userName} (MemeLab)`,
+          msg: `[ДЕМОТИВАТОР] ${tInp?.value || ''} — ${sInp?.value || ''}`
+        });
+        grantXP(10, 'Мем опубликован в гостевой');
+      });
+    }
+
+    /* ========================================================================
+       MODULE 11: CYBER ORACLE (lab://oracle)
+       ======================================================================== */
+    function renderOracle(container) {
+      const prophecies = [
+        'Сегодня тебя ждёт новый рекорд в играх и отличный настрой!',
+        'Зу Зу подсказывает: самое время собрать крутой бит в FL Studio 2004.',
+        'Погладь питомца на панели задач — он принесёт удачу!',
+        'Неоновый ветер 2004 года сулит крутую идею для проекта.'
+      ];
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header"><span>🔮 КИБЕР-ОРАКУЛ 2004</span><span>МАГИЯ ШАРА</span></div>
+            <div class="contrast-panel bevel-in" style="text-align:center; padding:18px;">
+              <div id="oracleText" style="font-size:15px; font-weight:bold; margin-bottom:12px; color:var(--accent-1);">Нажми кнопку и узнай предсказание!</div>
+              <button id="oracleAskBtn" class="y2k-btn y2k-btn-warn">🔮 Получить предсказание (+5 XP)</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('oracleAskBtn')?.addEventListener('click', () => {
+        const el = document.getElementById('oracleText');
+        if (el) el.textContent = prophecies[Math.floor(Math.random() * prophecies.length)];
+        playTone(580, 0.08, 'triangle', 880);
+        grantXP(5, 'Предсказание Оракула');
+      });
+    }
+
+    /* ========================================================================
+       MODULE 12: TAMAGOTCHI & 8-BIT SOUNDBOARD (lab://tamagotchi)
+       ======================================================================== */
+    function renderTamagotchi(container) {
+      container.innerHTML = `
+        <div class="y2k-container">
+          <div class="win-box bevel-out">
+            <div class="win-box-header"><span>👾 ТАМАГОЧИ & 8-БИТ СИНТ</span><span>LCD ЭКРАН</span></div>
+            <div class="tama-lcd-screen bevel-in" style="margin-bottom:10px;">
+              <div style="font-size:28px;">( =^･ω･^= )</div>
+              <div style="font-size:13px; margin-top:6px;">ЛЮБОВЬ: ${appState.catLove}% • СЫТОСТЬ: ${appState.catHunger}%</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+              <button id="tamaPetBtn" class="y2k-btn y2k-btn-accent">♥ Погладить</button>
+              <button id="tamaFeedBtn" class="y2k-btn">🐟 Покормить</button>
+              <button class="y2k-btn" data-sfx="coin">🪙 COIN</button>
+              <button class="y2k-btn" data-sfx="laser">⚡ LASER</button>
+              <button class="y2k-btn" data-sfx="jump">🦘 JUMP</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('tamaPetBtn')?.addEventListener('click', () => {
+        petTheCat('tama');
+        renderTamagotchi(container);
+      });
+      document.getElementById('tamaFeedBtn')?.addEventListener('click', () => {
+        feedTheCat();
+        renderTamagotchi(container);
+      });
+      container.querySelectorAll('[data-sfx]').forEach(b => {
+        b.addEventListener('click', () => {
+          const k = b.dataset.sfx;
+          if (k === 'coin') playTone(987.77, 0.08, 'square', 1318.5);
+          if (k === 'laser') playTone(1200, 0.1, 'sawtooth', 180);
+          if (k === 'jump') playTone(260, 0.1, 'square', 680);
+        });
+      });
+    }
+
+    /* ========================================================================
+       INITIALIZE Y2K OS
+       ======================================================================== */
+    bindGlobalChrome();
+    startClockAndTrail();
+    renderTaskbarPet();
+    applyTheme(appState.theme);
+    updateTopStats();
+    renderOS();
+    zuzuSay(`Здарова, ${appState.userName}! Я обновил систему: добавил Кастом Профиль (#${appState.userId}), мини FL Studio 2004 с каталогом твоих треков, Зоомагазин питомцев, оптимизировал шутер CYBER STRIKE 3D и подкатил гонки Turbo Drift 2004, Cyber Pong и Star Blaster! Погнали тестить! 🚀🔥`, 'hype');
+  </script>
+</body>
+</html>
